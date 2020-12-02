@@ -9,6 +9,6 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "hetestllo")
 }
 
-func initRouter(serverMux *ServeMux ){
+func InitRouter(serverMux *http.ServeMux ){
 	serverMux.HandleFunc("/test",testHandler)
 }
