@@ -16,4 +16,4 @@
 
 bin/
 pkg/
-*/log.txt
+*log*.txt

@@ -3,12 +3,12 @@ package main
 import (
 	"net/http"
 	"time"
-	"MasterServerGo/src/logger"
+	. "MasterServerGo/src/logger"
 	"MasterServerGo/src/handler"
 )
 
 func main() {
-	logger.InfoLogger.Println("Starting the application...")
+	LOG_INFO("Starting the application...")
 	mu := http.NewServeMux()
 	handler.InitRouter(mu)
 	s := &http.Server{
@@ -18,5 +18,5 @@ func main() {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	logger.ErrorLogger.Println(s.ListenAndServe())
+	s.ListenAndServe()
 }

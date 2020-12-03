@@ -1,23 +1,44 @@
 package logger
 
-import (
-    "log"
-    "os"
+// import (
+//     "log"
+//     "os"
+// )
+var masterLog *loglog//main log instance, should be init in main
+func LOG_DEBUG(msg ...interface{}){
+
+}
+
+func LOG_INFO(msg ...interface{}){
+
+}
+
+func LOG_WARN(msg ...interface{}){
+
+}
+
+func LOG_ERROR(msg ...interface{}){
+
+}
+
+type logLevel int32
+const(
+    traceLevel logLevel = 0
+    debugLevel logLevel = 1
+    infoLevel logLevel = 2
+    warnLevel logLevel = 3
+    errorLevel logLevel = 4
 )
 
-var (
-    WarningLogger *log.Logger
-    InfoLogger    *log.Logger
-    ErrorLogger   *log.Logger
-)
+type loglog struct{
+    outLogger []*baseLogger
 
-func init() {
-    file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-    if err != nil {
-        log.Fatal(err)
-    }
+}
 
-    InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-    WarningLogger = log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
-    ErrorLogger = log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+func (masterLog *loglog) writeLog(){
+
+}
+
+type baseLogger interface{
+    Append(string)
 }
