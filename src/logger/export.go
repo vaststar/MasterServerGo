@@ -9,10 +9,14 @@ func AddConsoleLog(){
 func AddFileLog(dirPath string, max_days int, maxSingleSize int){
 	masterLog.addLoggerInstance(newfileLogger(dirPath, max_days, maxSingleSize))
 }
-func WaitForLogger(){
+func WaitForAppExit(){
     masterLog.waitForLoggerExit()
 }
-
+func EndLog(){
+    masterLog.endLogger()
+}
+//----------Shouldn't use below as your bare logger-------------
+//----------Pls define your own tag and set funcDepth
 func LOG_TRACE(tag string, funcDepth int, msg ...interface{}){
 	masterLog.logTrace(tag, funcDepth+1, msg...)
 }

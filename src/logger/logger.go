@@ -15,7 +15,8 @@ import (
 
 var masterLog *loglog 
 func init(){
-    masterLog = &loglog{filePathLength:40}
+    masterLog = &loglog{filePathLength:40,isFinished:false}
+    masterLog.wait.Add(1)
     masterLog.runningLogger()
 }
 
@@ -27,11 +28,12 @@ type baseLogger interface{
 
 //loglog, truely logger
 type loglog struct{
-    lock          sync.Mutex
-    outLogger     []baseLogger
-    level         int 
-    wait          sync.WaitGroup
+    lock           sync.Mutex
+    outLogger      []baseLogger
+    level          int 
+    wait           sync.WaitGroup
     filePathLength int
+    isFinished     bool
 }
 
 func (masterLog *loglog) addLoggerInstance(bblog baseLogger){
@@ -40,10 +42,19 @@ func (masterLog *loglog) addLoggerInstance(bblog baseLogger){
     }
     masterLog.lock.Lock()
     defer masterLog.lock.Unlock()
+    if masterLog.isFinished {
+        return
+    }
     masterLog.outLogger = append(masterLog.outLogger,bblog)
 }
 func (masterLog *loglog) writeLog(tag string, level logLevel, skip int, msg ...interface{}){
     if int(level) & masterLog.level != 0{
+        masterLog.lock.Lock()
+        if masterLog.isFinished {
+            return
+        }
+        masterLog.lock.Unlock()
+
         logMsg := masterLog.composeLogMessage(tag, level, skip+1, msg)
         masterLog.lock.Lock()
         defer masterLog.lock.Unlock()
@@ -54,6 +65,23 @@ func (masterLog *loglog) writeLog(tag string, level logLevel, skip int, msg ...i
 }
 func (masterLog *loglog) waitForLoggerExit(){
     masterLog.wait.Wait()
+}
+func (masterLog *loglog) endLogger(){
+    masterLog.cleanUpLogger()
+    masterLog.wait.Wait()
+}
+func (masterLog *loglog) cleanUpLogger(){
+    masterLog.lock.Lock()
+    defer masterLog.lock.Unlock()
+    if masterLog.isFinished {
+        return
+    }
+    masterLog.isFinished = true
+    for _, val := range(masterLog.outLogger){
+        val.exitLogger()
+    }
+    masterLog.outLogger = nil
+    masterLog.wait.Done()
 }
 
 func (masterLog *loglog) logTrace(tag string, skip int, msg ...interface{}){
@@ -76,18 +104,11 @@ func (masterLog *loglog) runningLogger(){
     c := make(chan os.Signal)
     signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
     go func() {
-        masterLog.wait.Add(1)
-        defer masterLog.wait.Done()
         for s := range c {
             switch s {
             case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
                 masterLog.logInfo("LOGGER",2,"End Logger")
-                masterLog.lock.Lock()
-                defer masterLog.lock.Unlock()
-                for _, val := range(masterLog.outLogger){
-                    val.exitLogger()
-                }
-                masterLog.outLogger = nil
+                masterLog.cleanUpLogger()
                 return
             }
         }

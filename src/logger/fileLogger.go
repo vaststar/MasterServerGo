@@ -18,6 +18,7 @@ type fileLogger struct{
 	singleFileSize   int
 	maxKeepDays      int
 	mCurrentSize     int
+	mCurrentDate     string
 	logFile          *os.File
 }
 
@@ -30,7 +31,6 @@ func newfileLogger(file_path string, max_days int, max_singleSize int) *fileLogg
 		baseFileName     :  strings.TrimSuffix(filepath.Base(absPath), filepath.Ext(absPath)),
 	}
     os.MkdirAll(fileLog.dirPath, os.ModePerm);
-	fileLog.readyForLog(0)
 	
 	fileLog.messageList = make(chan string)
 	go func() {
@@ -61,11 +61,12 @@ func (fileLog *fileLogger) writeOneLog(msg string) {
 }
 
 func (fileLog *fileLogger) readyForLog(messageSize int) bool{
+	fileLog.mCurrentDate = time.Now().Format("2006-01-02")
 	fileLog.doRollOver(messageSize)
 	fileLog.removeOldFile()
 
 	if fileLog.logFile == nil {
-		currentFilePath := filepath.Join(fileLog.dirPath, fileLog.baseFileName +"-"+time.Now().Format("2006-01-02")+".log")
+		currentFilePath := fileLog.getRequiredFilePath()
 		file, err := os.OpenFile(currentFilePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			return false
@@ -90,8 +91,8 @@ func (fileLog *fileLogger) doRollOver(messageSize int) bool{
 	}
 
 	fileLog.closeCurrentFile()
-	//rename all file
-	files,_ := filepath.Glob(fileLog.baseFileName+"-"+time.Now().Format("2006-01-02")+"\\.log.*?")
+	//rename todays file
+	files,_ := filepath.Glob(fileLog.dirPath+"/*")
 	sort.Slice(files, func(i, j int) bool{
 		if r := regexp.MustCompile(".*?\\.log$"); r.MatchString(files[i]){
 			return false
@@ -110,9 +111,9 @@ func (fileLog *fileLogger) doRollOver(messageSize int) bool{
 		return true
 	})
 	for _, itemFile := range files{
-		if r := regexp.MustCompile(".*?\\.log$"); r.MatchString(itemFile) {
+		if r := regexp.MustCompile(".*?"+fileLog.mCurrentDate+"\\.log$"); r.MatchString(itemFile) {
 			os.Rename(itemFile,itemFile+".1")
-		} else if r := regexp.MustCompile("(.*?\\.log\\.)(\\d+)$"); r.MatchString(itemFile){
+		} else if r := regexp.MustCompile("(.*?"+fileLog.mCurrentDate+"\\.log\\.)(\\d+)$"); r.MatchString(itemFile){
 			params := r.FindStringSubmatch(itemFile)
 			old_num,_ := strconv.Atoi(params[2])
 			newFileName := params[1] + strconv.Itoa(old_num+1)
@@ -131,13 +132,19 @@ func (fileLog *fileLogger) closeCurrentFile() {
 }
 
 func (fileLog *fileLogger) removeOldFile() {
-	files,_ := filepath.Glob(fileLog.baseFileName+"-(\\d{4}-\\d{2}-\\d{2})\\.log"+".*?")
+	files,_ := filepath.Glob(fileLog.dirPath+"/*")
 	r := regexp.MustCompile(fileLog.baseFileName+"-(\\d{4}-\\d{2}-\\d{2})\\.log"+".*?")
 	for _, itemFile := range files {
-		params := r.FindStringSubmatch(itemFile)
-		fileTime,_ := time.Parse("2006-01-02",params[1])
-		if time.Now().Sub(fileTime) > time.Duration(fileLog.maxKeepDays*24)*time.Hour{
-			os.Remove(itemFile)
+		if r.MatchString(itemFile) {
+			params := r.FindStringSubmatch(itemFile)
+			fileTime,_ := time.Parse("2006-01-02",params[1])
+			if time.Now().Sub(fileTime) > time.Duration(fileLog.maxKeepDays*24)*time.Hour{
+				os.Remove(itemFile)
+			}
 		}
 	}
+}
+
+func (fileLog *fileLogger) getRequiredFilePath() string{
+	return filepath.Join(fileLog.dirPath, fileLog.baseFileName +"-"+fileLog.mCurrentDate+".log")
 }
