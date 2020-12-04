@@ -1,22 +1,18 @@
 package main
 
 import (
-	"net/http"
-	"time"
-	. "MasterServerGo/src/logger"
-	"MasterServerGo/src/handler"
+	//"path/filepath"
+	"MasterServerGo/src/logger"
+	"MasterServerGo/src/server"
 )
 
+func init() {
+	logger.InitLogger(int(logger.TraceLevel | logger.DebugLevel | logger.InfoLevel | logger.WarnLevel | logger.ErrorLevel))
+	logger.AddConsoleLog()
+	logger.AddFileLog("./testlog/cute.log", 10, 50*1024*1024)
+}
 func main() {
-	LOG_INFO("Starting the application...")
-	mu := http.NewServeMux()
-	handler.InitRouter(mu)
-	s := &http.Server{
-		Addr:           ":8080",
-		Handler:        mu,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
-	s.ListenAndServe()
+	logger.LOG_INFO("Main",1,"##########StartApp###########")
+	go func(){server.SERVER()}()
+	logger.WaitForLogger()
 }
