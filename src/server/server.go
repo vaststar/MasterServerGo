@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 	"MasterServerGo/src/server/handler"
+	. "MasterServerGo/src/server/sslog"
 )
 
 func SERVER() {

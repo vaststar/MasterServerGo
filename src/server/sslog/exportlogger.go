@@ -1,4 +1,4 @@
-package server
+package sslog
 import(
 	"MasterServerGo/src/logger"
 )
@@ -19,4 +19,12 @@ func LogWarn(msg ...interface{}){
 }
 func LogError(msg ...interface{}){
 	logger.LOG_ERROR(LOG_TAG, 2, msg...)
+}
+func WaitForLogger(){
+	logger.WaitForAppExit()
+}
+func init() {
+	logger.InitLogger(int(logger.TraceLevel | logger.DebugLevel | logger.InfoLevel | logger.WarnLevel | logger.ErrorLevel))
+	logger.AddConsoleLog()
+	logger.AddFileLog("./serverlog/server.log", 10, 50*1024*1024)
 }

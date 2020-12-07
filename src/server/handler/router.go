@@ -3,11 +3,11 @@ package handler
 import (
 	"io"
 	"net/http"
-	. "MasterServerGo/src/logger"
+	. "MasterServerGo/src/server/sslog"
 )
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
-	LOG_TRACE("test",1,"hello log")
+	LogInfo("hello log")
 	io.WriteString(w, "hetestllo")
 }
 
