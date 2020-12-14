@@ -1,6 +1,7 @@
 package sslog
 import(
 	"MasterServerGo/src/logger"
+	_ "MasterServerGo/src/configure"
 )
 const(
 	LOG_TAG = "SERVER"

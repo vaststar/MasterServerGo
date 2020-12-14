@@ -1,10 +1,9 @@
 package main
 
 import (
-	//"path/filepath"
 	. "MasterServerGo/src/server/sslog"
 	"MasterServerGo/src/server"
-	//_ "MasterServerGo/src/serverdb"
+	_ "MasterServerGo/src/server/serverdb"
 )
 
 
