@@ -1,7 +1,6 @@
 package logger
 
 import(
-	"sync"
 	"path/filepath"
 	"strings"
 	"os"
@@ -11,8 +10,6 @@ import(
 	"strconv"
 )
 type fileLogger struct{
-	messageList 	 chan string
-	wait        	 sync.WaitGroup
 	dirPath      	 string  
 	baseFileName     string
 	singleFileSize   int
@@ -31,28 +28,14 @@ func newfileLogger(file_path string, max_days int, max_singleSize int) *fileLogg
 		baseFileName     :  strings.TrimSuffix(filepath.Base(absPath), filepath.Ext(absPath)),
 	}
     os.MkdirAll(fileLog.dirPath, os.ModePerm);
-	
-	fileLog.messageList = make(chan string)
-	go func() {
-		fileLog.wait.Add(1)
-		defer fileLog.wait.Done()
-		for msg := range fileLog.messageList{
-			fileLog.writeOneLog(msg)
-		}
-		fileLog.closeCurrentFile()
-	}()
 	return fileLog
-}
-func (fileLog *fileLogger) appendMsg(msg string) {
-	fileLog.messageList <- msg
 }
 
 func (fileLog *fileLogger) exitLogger() {
-	close(fileLog.messageList)
-	fileLog.wait.Wait()
+	fileLog.closeCurrentFile()
 }
 
-func (fileLog *fileLogger) writeOneLog(msg string) {
+func (fileLog *fileLogger) writeOneMsg(msg string) {
 	if fileLog.readyForLog(len(msg)){
 		if _, err := fileLog.logFile.WriteString(msg); err == nil{
 			fileLog.mCurrentSize += len(msg)

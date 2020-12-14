@@ -16,24 +16,20 @@ func init() {
 func TestFileLog(t *testing.T){
 	t.Log("=====Test Async Log=====")
 	defer t.Log("=====Finish Async Log=====")
-    quit := make(chan int)
-    go func(){
-		for i := 0; i < 100; i++{
-			LogDebugTest("gg", i)
-		}
-		quit<-1
-	}()
-	go func(){
-		for i := 0; i < 100; i++{
-			t.Log("ss")
-			LogDebugTest("tt", i)
-		}
-		quit<-1
-	}()
+	n := 3//chan number
+	quit := make(chan int,n)
+	for u:=0;u<n;u++{
+		go func(num int){
+			for i := 0; i < 10000; i++{
+				LogDebugTest(num,"<<", i)
+			}
+			quit<-1
+		}(u)
+	}
 	sum := 0
 	for range quit{
 		sum++
-		if sum >= 2{
+		if sum >= n{
 			close(quit)
 			logger.EndLog()
 			return 

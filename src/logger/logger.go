@@ -20,24 +20,18 @@ func init(){
     masterLog.runningLogger()
 }
 
-//baseLogger, all output logger should implement this interface
-type baseLogger interface{
-    appendMsg(string)
-    exitLogger()
-}
-
 //loglog, truely logger
 type loglog struct{
     lock           sync.Mutex
-    outLogger      []baseLogger
+    logEntry       []*logEntry//base log entry, eg. console, filelog
     level          int 
     wait           sync.WaitGroup
     filePathLength int
     isFinished     bool
 }
 
-func (masterLog *loglog) addLoggerInstance(bblog baseLogger){
-    if bblog == nil{
+func (masterLog *loglog) addLoggerInstance(logentry *logEntry){
+    if logentry == nil{
         return
     }
     masterLog.lock.Lock()
@@ -45,7 +39,7 @@ func (masterLog *loglog) addLoggerInstance(bblog baseLogger){
     if masterLog.isFinished {
         return
     }
-    masterLog.outLogger = append(masterLog.outLogger,bblog)
+    masterLog.logEntry = append(masterLog.logEntry,logentry)
 }
 func (masterLog *loglog) writeLog(tag string, level logLevel, skip int, msg ...interface{}){
     if int(level) & masterLog.level != 0{
@@ -58,7 +52,7 @@ func (masterLog *loglog) writeLog(tag string, level logLevel, skip int, msg ...i
         logMsg := masterLog.composeLogMessage(tag, level, skip+1, msg)
         masterLog.lock.Lock()
         defer masterLog.lock.Unlock()
-        for _, val := range masterLog.outLogger{
+        for _, val := range masterLog.logEntry{
             val.appendMsg(logMsg)
         }
     }
@@ -77,10 +71,10 @@ func (masterLog *loglog) cleanUpLogger(){
         return
     }
     masterLog.isFinished = true
-    for _, val := range(masterLog.outLogger){
-        val.exitLogger()
+    for _, val := range(masterLog.logEntry){
+        val.exitEntry()
     }
-    masterLog.outLogger = nil
+    masterLog.logEntry = nil
     masterLog.wait.Done()
 }
 
@@ -102,7 +96,7 @@ func (masterLog *loglog) logError(tag string, skip int, msg ...interface{}){
 //should call this while ending program
 func (masterLog *loglog) runningLogger(){
     c := make(chan os.Signal)
-    signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGUSR1, syscall.SIGUSR2)
+    signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
     go func() {
         for s := range c {
             switch s {

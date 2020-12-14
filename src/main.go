@@ -4,7 +4,7 @@ import (
 	//"path/filepath"
 	. "MasterServerGo/src/server/sslog"
 	"MasterServerGo/src/server"
-	_ "MasterServerGo/src/serverdb"
+	//_ "MasterServerGo/src/serverdb"
 )
 
 

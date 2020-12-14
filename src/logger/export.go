@@ -1,13 +1,13 @@
 package logger
 
-func InitLogger(loglevel int){
+func InitLogger(loglevel int){//use & for determining level
 	masterLog.level = loglevel
 }
 func AddConsoleLog(){
-	masterLog.addLoggerInstance(newconsoleLogger())
+	masterLog.addLoggerInstance(newLogEntry(newconsoleLogger()))
 }
 func AddFileLog(dirPath string, max_days int, maxSingleSize int){
-	masterLog.addLoggerInstance(newfileLogger(dirPath, max_days, maxSingleSize))
+	masterLog.addLoggerInstance(newLogEntry(newfileLogger(dirPath, max_days, maxSingleSize)))
 }
 func WaitForAppExit(){
     masterLog.waitForLoggerExit()
