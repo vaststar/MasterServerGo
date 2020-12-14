@@ -10,13 +10,13 @@ import (
 	. "MasterServerGo/src/server/sslog"
 )
 
-func SERVER() {
+func SERVER(addr string) {
 	LogInfo("====Start Server====")
 	mu := http.NewServeMux()
 	handler.InitRouter(mu)
 
 	s := &http.Server{
-		Addr:           ":8088",
+		Addr:           addr,
 		Handler:        mu,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
