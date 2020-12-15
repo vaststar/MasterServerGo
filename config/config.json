@@ -14,8 +14,8 @@
     },
     "dbConfig": {
         "sqlite": {
-            "filepath": "./database/server.db",
-            "use": true
+            "dbpath": "./database/server.db",
+            "use": false
         },
         "mysql": {
             "use":false,

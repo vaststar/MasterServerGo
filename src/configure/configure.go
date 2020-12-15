@@ -7,7 +7,7 @@ import(
 
 //db config
 type SqliteConfig struct{
-	FilePath     string `json:"filepath"`
+	DbPath     string `json:"dbpath"`
 	Use          bool   `json:"use"`
 }
 type MysqlConfig struct{
