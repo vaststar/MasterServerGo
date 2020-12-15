@@ -1,0 +1,34 @@
+{
+    "logConfig": {
+        "fileLog": {
+            "path": "./serverlog/server.log",
+            "maxkeepday": 7,
+            "filesize": 5242880,
+            "level": 15,
+            "use": true
+        },
+        "consoleLog": {
+            "level": 15,
+            "use": true
+        }
+    },
+    "dbConfig": {
+        "sqlite": {
+            "filepath": "./database/server.db",
+            "use": true
+        },
+        "mysql": {
+            "use":false,
+            "database":"godb",
+            "username":"test",
+            "password":"password",
+            "ip":"127.0.0.1",
+            "port":3306,
+            "network":"tcp"
+        }
+    },
+    "serverConfig": {
+        "ip": "0.0.0.0",
+        "port": 8088
+    }
+}

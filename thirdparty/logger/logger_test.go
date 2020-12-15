@@ -2,16 +2,16 @@ package logger
 
 import(
 	"testing"
-	"MasterServerGo/src/logger"
+	"MasterServerGo/thirdparty/logger"
 )
 
 func LogDebugTest(msg ...interface{}){
 	logger.LOG_DEBUG("TEST", 2, msg...)
 }
 func init() {
-	logger.InitLogger(int(logger.TraceLevel | logger.DebugLevel | logger.InfoLevel | logger.WarnLevel | logger.ErrorLevel))
-	logger.AddConsoleLog()
-	logger.AddFileLog("./testlog/test/cute.log", 1, 5*1024*1024)
+	allLevel := int(logger.TraceLevel | logger.DebugLevel | logger.InfoLevel | logger.WarnLevel | logger.ErrorLevel)
+	logger.AddConsoleLog(allLevel)
+	logger.AddFileLog(allLevel, "./testlog/test/cute.log", 1, 5*1024*1024)
 }
 func TestFileLog(t *testing.T){
 	t.Log("=====Test Async Log=====")

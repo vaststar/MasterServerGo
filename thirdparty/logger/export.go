@@ -1,40 +1,55 @@
 package logger
 
-func InitLogger(loglevel int){//use & for determining level
-	masterLog.level = loglevel
+func AddConsoleLog(level int){
+    if logLog != nil{
+        logLog.addLoggerInstance(newLogEntry(level, newconsoleLogger()))
+    }
 }
-func AddConsoleLog(){
-	masterLog.addLoggerInstance(newLogEntry(newconsoleLogger()))
-}
-func AddFileLog(dirPath string, max_days int, maxSingleSize int){
-	masterLog.addLoggerInstance(newLogEntry(newfileLogger(dirPath, max_days, maxSingleSize)))
+func AddFileLog(level int, dirPath string, max_days int, maxSingleSize int){
+    if logLog != nil{
+        logLog.addLoggerInstance(newLogEntry(level, newfileLogger(dirPath, max_days, maxSingleSize)))
+    }
 }
 func WaitForAppExit(){
-    masterLog.waitForLoggerExit()
+    if logLog != nil{
+        logLog.waitForLoggerExit()
+    }
 }
 func EndLog(){
-    masterLog.endLogger()
+    if logLog != nil{
+        logLog.endLogger()
+    }
 }
 //----------Shouldn't use below as your bare logger-------------
 //----------Pls define your own tag and set funcDepth
 func LOG_TRACE(tag string, funcDepth int, msg ...interface{}){
-	masterLog.logTrace(tag, funcDepth+1, msg...)
+    if logLog != nil{
+        logLog.logTrace(tag, funcDepth+1, msg...)
+    }
 }
 
 func LOG_DEBUG(tag string, funcDepth int, msg ...interface{}){
-	masterLog.logDebug(tag, funcDepth+1, msg...)
+    if logLog != nil{
+        logLog.logDebug(tag, funcDepth+1, msg...)
+    }
 }
 
 func LOG_INFO(tag string, funcDepth int, msg ...interface{}){
-	masterLog.logInfo(tag, funcDepth+1, msg...)
+    if logLog != nil{
+        logLog.logInfo(tag, funcDepth+1, msg...)
+    }
 }
 
 func LOG_WARN(tag string, funcDepth int, msg ...interface{}){
-	masterLog.logWarn(tag, funcDepth+1, msg...)
+    if logLog != nil{
+        logLog.logWarn(tag, funcDepth+1, msg...)
+    }
 }
 
 func LOG_ERROR(tag string, funcDepth int, msg ...interface{}){
-	masterLog.logError(tag, funcDepth+1, msg...)
+    if logLog != nil{
+        logLog.logError(tag, funcDepth+1, msg...)
+    }
 }
 
 //loglevel, determine log level 

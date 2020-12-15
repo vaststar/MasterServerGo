@@ -1,6 +1,6 @@
 package sslog
 import(
-	"MasterServerGo/src/logger"
+	"MasterServerGo/thirdparty/logger"
 	_ "MasterServerGo/src/configure"
 )
 const(
@@ -21,11 +21,12 @@ func LogWarn(msg ...interface{}){
 func LogError(msg ...interface{}){
 	logger.LOG_ERROR(LOG_TAG, 2, msg...)
 }
+func AddConsoleLog(level int){
+	logger.AddConsoleLog(level)
+}
+func AddFileLog(level int, dirPath string, max_days int, maxSingleSize int){
+	logger.AddFileLog(level, dirPath, max_days, maxSingleSize)
+}
 func WaitForLogger(){
 	logger.WaitForAppExit()
-}
-func init() {
-	logger.InitLogger(int(logger.TraceLevel | logger.DebugLevel | logger.InfoLevel | logger.WarnLevel | logger.ErrorLevel))
-	logger.AddConsoleLog()
-	logger.AddFileLog("./serverlog/server.log", 10, 50*1024*1024)
 }

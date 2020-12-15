@@ -13,13 +13,16 @@ import (
     "strings"
 )
 
-var masterLog *loglog 
+var logLog     *loglog 
+var initSync   sync.Once
 func init(){
-    masterLog = &loglog{filePathLength:40,isFinished:false}
-    masterLog.wait.Add(1)
-    masterLog.runningLogger()
+    logLog = &loglog{
+        filePathLength : 40,
+        isFinished     : false,
+    }
+    logLog.wait.Add(1)
+    logLog.runningLogger()
 }
-
 //loglog, truely logger
 type loglog struct{
     lock           sync.Mutex
@@ -28,8 +31,10 @@ type loglog struct{
     wait           sync.WaitGroup
     filePathLength int
     isFinished     bool
-}
 
+    waitForEndSync sync.Once
+    endLogSync     sync.Once
+}
 func (masterLog *loglog) addLoggerInstance(logentry *logEntry){
     if logentry == nil{
         return
@@ -39,30 +44,33 @@ func (masterLog *loglog) addLoggerInstance(logentry *logEntry){
     if masterLog.isFinished {
         return
     }
+    masterLog.level |= logentry.level
     masterLog.logEntry = append(masterLog.logEntry,logentry)
 }
 func (masterLog *loglog) writeLog(tag string, level logLevel, skip int, msg ...interface{}){
-    if int(level) & masterLog.level != 0{
-        masterLog.lock.Lock()
-        if masterLog.isFinished {
-            return
-        }
+    masterLog.lock.Lock()
+    sholdAppendLog := int(level) & masterLog.level != 0
+    if !sholdAppendLog || masterLog.isFinished{
         masterLog.lock.Unlock()
-
-        logMsg := masterLog.composeLogMessage(tag, level, skip+1, msg)
-        masterLog.lock.Lock()
-        defer masterLog.lock.Unlock()
-        for _, val := range masterLog.logEntry{
-            val.appendMsg(logMsg)
-        }
+        return
+    }
+    masterLog.lock.Unlock()
+    //compose log and append to entries
+    logMsg := masterLog.composeLogMessage(tag, level, skip+1, msg)
+    masterLog.lock.Lock()
+    defer masterLog.lock.Unlock()
+    for _, val := range masterLog.logEntry{
+        val.appendMsg(level, logMsg)
     }
 }
 func (masterLog *loglog) waitForLoggerExit(){
-    masterLog.wait.Wait()
+    masterLog.waitForEndSync.Do(func(){masterLog.wait.Wait()})
 }
 func (masterLog *loglog) endLogger(){
-    masterLog.cleanUpLogger()
-    masterLog.wait.Wait()
+    masterLog.endLogSync.Do(func(){
+        masterLog.cleanUpLogger()
+        masterLog.wait.Wait()
+    })
 }
 func (masterLog *loglog) cleanUpLogger(){
     masterLog.lock.Lock()

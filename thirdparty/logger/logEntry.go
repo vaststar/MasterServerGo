@@ -12,13 +12,15 @@ type baseLogger interface{
 type logEntry struct{
 	messageList    chan string
 	wait           sync.WaitGroup
-	outputLogger    baseLogger
+	outputLogger   baseLogger
+	level          int
 }
 
-func newLogEntry(outLogger baseLogger) *logEntry {
+func newLogEntry(logLevel int, outLogger baseLogger) *logEntry {
 	logentry := &logEntry{
 		messageList  :  make(chan string),
 		outputLogger :  outLogger,
+		level        :  logLevel,
 	}
 	go func() {
 		logentry.wait.Add(1)
@@ -31,8 +33,10 @@ func newLogEntry(outLogger baseLogger) *logEntry {
 	return logentry
 }
 
-func (logentry *logEntry) appendMsg(msg string) {
-	logentry.messageList <- msg
+func (logentry *logEntry) appendMsg(level logLevel, msg string) {
+	if logentry.level & int(level) != 0{
+		logentry.messageList <- msg
+	}
 }
 
 func (logentry *logEntry) exitEntry() {

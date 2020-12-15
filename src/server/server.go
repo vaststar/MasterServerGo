@@ -11,7 +11,7 @@ import (
 )
 
 func SERVER(addr string) {
-	LogInfo("====Start Server====")
+	LogInfo("====Start Server On ",addr,"====")
 	mu := http.NewServeMux()
 	handler.InitRouter(mu)
 
