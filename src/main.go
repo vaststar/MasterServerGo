@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"database/sql"
+	"os"
+	"path/filepath"
 	"MasterServerGo/src/configure"
 	. "MasterServerGo/src/server/sslog"
-	"MasterServerGo/src/server"
 	"MasterServerGo/src/server/serverdb"
+	"MasterServerGo/src/server"
 )
 
 func main() {
@@ -23,31 +24,35 @@ func main() {
 	if conf.LogConf.FileConf != nil && conf.LogConf.FileConf.Use{
 		AddFileLog(conf.LogConf.FileConf.LogLevel, conf.LogConf.FileConf.LogPath, conf.LogConf.FileConf.MaxDays, conf.LogConf.FileConf.FileSize)
 	}
-	defer WaitForLogger()
 
 	LogInfo("##########StartApp###########")
+
 	//init atabase
+	var driverName, dataSourceName string
+	var files []string
 	if conf.DbConf.SqliteConf != nil && conf.DbConf.SqliteConf.Use{
-		db, err := sql.Open("sqlite", conf.DbConf.SqliteConf.DbPath)
-		if err != nil {
-			LogError(err)
-			return
-		}
-		serverdb.InitDB(db)
+		driverName, dataSourceName, files = "sqlite3", conf.DbConf.SqliteConf.DbPath, conf.DbConf.SqliteConf.SqlFiles
+		//mkdir
+		os.MkdirAll(filepath.Dir(dataSourceName), os.ModePerm);
+		dataSourceName = "file:"+dataSourceName+"?cache=shared"
 	} else if conf.DbConf.MysqlConf != nil && conf.DbConf.MysqlConf.Use{
-		str := fmt.Sprintf("%s:%s@%s(%s:%d)/%s",conf.DbConf.MysqlConf.UserName, conf.DbConf.MysqlConf.Password, 
-												conf.DbConf.MysqlConf.Network, conf.DbConf.MysqlConf.Ip, 
-												conf.DbConf.MysqlConf.Port, conf.DbConf.MysqlConf.DatabaseName)
-		db, err := sql.Open("mysql", str)
-		if err != nil {
-			LogError(err)
-			return
-		}
-		serverdb.InitDB(db)
+		driverName = "mysql"
+		dataSourceName = fmt.Sprintf("%s:%s@%s(%s:%d)/%s",conf.DbConf.MysqlConf.UserName, conf.DbConf.MysqlConf.Password, 
+												conf.DbConf.MysqlConf.Protocol, conf.DbConf.MysqlConf.Ip, 
+												conf.DbConf.MysqlConf.Port, conf.DbConf.MysqlConf.DbName)
+		files = conf.DbConf.MysqlConf.SqlFiles
+	}
+	if len(driverName) > 0{
+		serverdb.InitDB(driverName, dataSourceName)
+		serverdb.ExecuteFiles(files)
+		defer serverdb.CloseDB()
+	} else {
+		LogError("Missing sql configure.")
 	}
 
 	//run server
 	go func(){
 		server.SERVER(fmt.Sprintf("%v:%d",conf.ServerConf.Ip,conf.ServerConf.Port))
 	}()
+	WaitForLogger()
 }

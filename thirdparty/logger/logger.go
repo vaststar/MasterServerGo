@@ -109,7 +109,6 @@ func (masterLog *loglog) runningLogger(){
         for s := range c {
             switch s {
             case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
-                masterLog.logInfo("LOGGER",2,"End Logger")
                 masterLog.cleanUpLogger()
                 return
             }

@@ -7,16 +7,18 @@ import(
 
 //db config
 type SqliteConfig struct{
-	DbPath     string `json:"dbpath"`
-	Use          bool   `json:"use"`
+	DbPath       string   `json:"dbpath"`
+	SqlFiles     []string `json:"sqlFiles,omitempty"`
+	Use          bool     `json:"use"`
 }
 type MysqlConfig struct{
 	UserName 	 string `json:"username"`
 	Password 	 string `json:"password"`
 	Ip       	 string `json:"ip"`
 	Port     	 int    `json:"port"`
-	Network  	 string `json:"network"`
-	DatabaseName string `json:"database"`
+	Protocol  	 string `json:"protocol"`
+	DbName       string `json:"dbname"`
+	SqlFiles     []string `json:"sqlFiles,omitempty"`
 	Use          bool   `json:"use"`
 }
 type DataBaseConfig struct{

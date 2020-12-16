@@ -2,17 +2,38 @@ package serverdb
 
 import(
 	"database/sql"
-	"sync"
-	//. "MasterServerGo/src/server/sslog"
+	. "MasterServerGo/src/server/sslog"
+	_ "MasterServerGo/thirdparty/github.com/mattn/go-sqlite3"
+	_ "MasterServerGo/thirdparty/github.com/go-sql-driver/mysql"
 )
-var DBDB *ServerDB = &ServerDB{}
-var initOnce sync.Once
-type ServerDB struct{
+type serverDB struct{
 	db *sql.DB
 }
 
-func InitDB(db *sql.DB){
-	initOnce.Do(func(){
-		DBDB.db = db
-	})
+var supportedDriver map[string]bool = map[string]bool{"sqlite3":true,"mysql":true}
+
+func createDB(driverName string, dataSourceName string) *serverDB{
+	if !supportedDriver[driverName]{
+		LogDBError(driverName," not supported.")
+		return nil
+	}
+	dbConn, err := sql.Open(driverName, dataSourceName)
+	if err != nil{
+		LogDBError(err)
+		return nil
+	}    
+	if err := dbConn.Ping(); err != nil {
+		LogDBError(err)
+		return nil
+	}
+	svDB := &serverDB{
+		db : dbConn,
+	}
+	return svDB
+}
+
+func (svDB *serverDB)closeDB(){
+	if svDB != nil{
+		svDB.db.Close()
+	}
 }

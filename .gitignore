@@ -16,6 +16,8 @@
 
 bin/
 pkg/
-*log*.txt
+
+# rundata
+rundata/
 *.log
-serverlog/*
+*.db
