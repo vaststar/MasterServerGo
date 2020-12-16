@@ -16,11 +16,11 @@
         "sqlite": {
             "dbpath": "./rundata/db/server.db",
             "sqlFiles": ["./config/sql/sqlite/table.sql"],
-            "use": true
+            "use": false
         },
         "mysql": {
-            "use":false,
-            "dbname":"godb",
+            "use":true,
+            "dbname":"tt",
             "username":"test",
             "password":"password",
             "ip":"127.0.0.1",

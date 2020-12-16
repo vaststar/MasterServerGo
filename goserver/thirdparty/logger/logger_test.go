@@ -2,16 +2,15 @@ package logger
 
 import(
 	"testing"
-	"MasterServerGo/thirdparty/logger"
 )
 
 func LogDebugTest(msg ...interface{}){
-	logger.LOG_DEBUG("TEST", 2, msg...)
+	LOG_DEBUG("TEST", 2, msg...)
 }
 func init() {
-	allLevel := int(logger.TraceLevel | logger.DebugLevel | logger.InfoLevel | logger.WarnLevel | logger.ErrorLevel)
-	logger.AddConsoleLog(allLevel)
-	logger.AddFileLog(allLevel, "./testlog/test/cute.log", 1, 5*1024*1024)
+	allLevel := int(TraceLevel | DebugLevel | InfoLevel | WarnLevel | ErrorLevel)
+	AddConsoleLog(allLevel)
+	AddFileLog(allLevel, "./testlog/test/cute.log", 1, 5*1024*1024)
 }
 func TestFileLog(t *testing.T){
 	t.Log("=====Test Async Log=====")
@@ -31,7 +30,7 @@ func TestFileLog(t *testing.T){
 		sum++
 		if sum >= n{
 			close(quit)
-			logger.EndLog()
+			EndLog()
 			return 
 		}
 	}

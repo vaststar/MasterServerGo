@@ -1,6 +1,6 @@
 package sslog
 import(
-	"MasterServerGo/thirdparty/logger"
+	"goserver/thirdparty/logger"
 	_ "MasterServerGo/src/configure"
 )
 const(
