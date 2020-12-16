@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"MasterServerGo/src/configure"
-	. "MasterServerGo/src/server/sslog"
-	"MasterServerGo/src/server/serverdb"
-	"MasterServerGo/src/server"
+	"goserver/server/configure"
+	. "goserver/server/sslog"
+	"goserver/server/serverdb"
+	"goserver/server"
 )
 
 func main() {

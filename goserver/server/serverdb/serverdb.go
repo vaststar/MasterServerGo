@@ -2,9 +2,9 @@ package serverdb
 
 import(
 	"database/sql"
-	. "MasterServerGo/src/server/sslog"
-	_ "MasterServerGo/thirdparty/github.com/mattn/go-sqlite3"
-	_ "MasterServerGo/thirdparty/github.com/go-sql-driver/mysql"
+	. "goserver/server/sslog"
+	_ "goserver/thirdparty/github.com/mattn/go-sqlite3"
+	_ "goserver/thirdparty/github.com/go-sql-driver/mysql"
 )
 type serverDB struct{
 	db *sql.DB

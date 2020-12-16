@@ -5,7 +5,7 @@ import(
 	"os"
 	"bufio"
 	"strings"
-	. "MasterServerGo/src/server/sslog"
+	. "goserver/server/sslog"
 )
 
 var DBDB *serverDB

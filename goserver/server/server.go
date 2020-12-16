@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"MasterServerGo/src/server/handler"
-	. "MasterServerGo/src/server/sslog"
+	"goserver/server/handler"
+	. "goserver/server/sslog"
 )
 
 func SERVER(addr string) {

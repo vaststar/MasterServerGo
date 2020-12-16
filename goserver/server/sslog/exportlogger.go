@@ -1,7 +1,6 @@
 package sslog
 import(
 	"goserver/thirdparty/logger"
-	_ "MasterServerGo/src/configure"
 )
 const(
 	LOG_SERVER_TAG = "SERVER"

@@ -16,10 +16,10 @@
         "sqlite": {
             "dbpath": "./rundata/db/server.db",
             "sqlFiles": ["./config/sql/sqlite/table.sql"],
-            "use": false
+            "use": true
         },
         "mysql": {
-            "use":true,
+            "use":false,
             "dbname":"tt",
             "username":"test",
             "password":"password",

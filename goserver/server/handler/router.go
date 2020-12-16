@@ -3,7 +3,7 @@ package handler
 import (
 	"io"
 	"net/http"
-	. "MasterServerGo/src/server/sslog"
+	. "goserver/server/sslog"
 )
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
