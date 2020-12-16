@@ -1,7 +1,7 @@
 {
     "logConfig": {
         "fileLog": {
-            "path": "./rundata/log/server.log",
+            "path": "./log/server.log",
             "maxkeepday": 7,
             "filesize": 5242880,
             "level": 31,
@@ -14,7 +14,7 @@
     },
     "dbConfig": {
         "sqlite": {
-            "dbpath": "./rundata/db/server.db",
+            "dbpath": "./db/server.db",
             "sqlFiles": ["./config/sql/sqlite/table.sql"],
             "use": true
         },

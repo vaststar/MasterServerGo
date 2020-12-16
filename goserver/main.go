@@ -3,16 +3,19 @@ package main
 import (
 	"fmt"
 	"os"
+	"flag"
 	"path/filepath"
 	"goserver/server/configure"
 	. "goserver/server/sslog"
 	"goserver/server/serverdb"
 	"goserver/server"
 )
+var configPath = flag.String("config", "./config/config.json", "Input Configure FilePath")
 
 func main() {
+	flag.Parse()
 	//config
-	conf, err := configure.ReadConfig("./config/config.json")
+	conf, err := configure.ReadConfig(*configPath)
 	if err != nil{
 		panic(err)
 	}
