@@ -1,0 +1,47 @@
+version: "3"
+services:
+  webgo_server:
+    build:
+      context: ../goserver
+      dockerfile: Dockerfile_goserver
+    image: "webgo/goserver:latest"
+    restart: always
+    ports:
+      - "44444:44444"
+    volumes:
+      - ../goserver/config:/goweb/goserver/config
+      - ../goserver/src:/goweb/goserver/src
+      - ../rundata:/goweb/rundata
+    depends_on:
+      - webgo_mysql
+    networks: 
+      - server_net
+      - mysql_net
+
+  webgo_mysql:
+    build:
+      context: ../mysql
+      dockerfile: Dockerfile_mysql
+    image: "webgo/mysql:latest"
+    restart: always
+    environment:
+      MYSQL_DATABASE: "webgo_db"
+      MYSQL_USER: 'webgo_user'
+      MYSQL_PASSWORD: 'webgo_password'
+      MYSQL_ROOT_PASSWORD: "webgo_mysql_password"
+    volumes:
+      - ../rundata/mysqldata:/var/lib/mysql
+      - ../mysql/my.cnf:/etc/my.cnf
+      - ../mysql/init:/docker-entrypoint-initdb.d
+      - ../mysql/backup:/backup
+    ports:
+      - "3306:3306"
+    networks: 
+      - mysql_net
+      
+networks: 
+  server_net:
+    name: "server_net"
+  mysql_net:
+    name: "mysql_net"
+      

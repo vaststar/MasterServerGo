@@ -16,20 +16,20 @@
         "sqlite": {
             "dbpath": "./db/server.db",
             "sqlFiles": ["./config/sql/sqlite/table.sql"],
-            "use": true
+            "use": false
         },
         "mysql": {
-            "use":false,
-            "dbname":"tt",
-            "username":"test",
-            "password":"password",
-            "ip":"127.0.0.1",
+            "use":true,
+            "dbname":"webgo_db",
+            "username":"webgo_user",
+            "password":"webgo_password",
+            "ip":"webgo_mysql",
             "port":3306,
             "protocol":"tcp"
         }
     },
     "serverConfig": {
         "ip": "0.0.0.0",
-        "port": 8088
+        "port": 44444
     }
 }

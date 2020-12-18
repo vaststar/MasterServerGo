@@ -54,6 +54,29 @@ func ExecuteFiles(files []string){
 	}
 }
 
-func QueryUser(){
+func QueryUser() string{
 	LogInfo(" query user")
+	if DBDB == nil{
+		return "no db"
+	}
+	rows, err := DBDB.db.Query("select * from identity")
+	if err != nil {
+		LogDBError(err)
+	}
+	defer rows.Close()
+	var id, name, password string
+	var result string
+	for rows.Next() {
+	    err := rows.Scan(&id, &name, &password)
+	    if err != nil {
+			LogDBError(err)
+	    }
+		LogInfo("one done ")
+	    result += "id: " +id + ", name: "+ name+ ", password: "+ password
+	}
+	err = rows.Err()
+	if err != nil {
+		LogDBError(err)
+	}
+	return result
 }

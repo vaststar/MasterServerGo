@@ -1,0 +1,15 @@
+FROM golang
+MAINTAINER ThomasZhu 47029316@qq.com
+
+RUN mkdir -p /goweb/goserver/src &&\
+    mkdir -p /goweb/goserver/config
+
+COPY runserver.sh /goweb/goserver/runserver.sh
+
+WORKDIR /goweb/goserver
+
+RUN chmod +x ./runserver.sh
+
+ENTRYPOINT ["./runserver.sh"]
+
+EXPOSE 44444

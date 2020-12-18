@@ -33,7 +33,11 @@ func createDB(driverName string, dataSourceName string) *serverDB{
 }
 
 func (svDB *serverDB)closeDB(){
-	if svDB != nil{
+	if svDB != nil && svDB.db != nil{
 		svDB.db.Close()
 	}
+}
+
+func (svDB *serverDB)executeSQL(){
+	
 }
