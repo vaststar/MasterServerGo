@@ -21,3 +21,4 @@ pkg/
 rundata/
 *.log
 *.db
+webgoRun/
