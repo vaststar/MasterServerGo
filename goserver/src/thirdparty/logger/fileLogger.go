@@ -8,6 +8,7 @@ import(
 	"sort"
 	"regexp"
 	"strconv"
+	"fmt"
 )
 type fileLogger struct{
 	dirPath      	 string  
@@ -44,7 +45,6 @@ func (fileLog *fileLogger) writeOneMsg(msg string) {
 }
 
 func (fileLog *fileLogger) readyForLog(messageSize int) bool{
-	fileLog.mCurrentDate = time.Now().Format("2006-01-02")
 	fileLog.doRollOver(messageSize)
 	fileLog.removeOldFile()
 
@@ -66,10 +66,13 @@ func (fileLog *fileLogger) readyForLog(messageSize int) bool{
 }
 
 func (fileLog *fileLogger) doRollOver(messageSize int) bool{
+	fileLog.mCurrentDate = time.Now().Format("2006-01-02")
 	if messageSize > fileLog.singleFileSize {
+		fmt.Println("[FileLogger error]message too large, max size is: ",fileLog.singleFileSize)
 		return false
 	}
-	if fileLog.mCurrentSize + messageSize <= fileLog.singleFileSize {
+	if fileLog.mCurrentSize + messageSize <= fileLog.singleFileSize &&
+	   fileLog.mCurrentDate == time.Now().Format("2006-01-02"){
 		return true
 	}
 
@@ -103,6 +106,7 @@ func (fileLog *fileLogger) doRollOver(messageSize int) bool{
 			os.Rename(itemFile, newFileName)
 		}
 	}
+	fileLog.mCurrentDate = time.Now().Format("2006-01-02")
 	return true
 }
 

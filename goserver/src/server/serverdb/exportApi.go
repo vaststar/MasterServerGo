@@ -55,7 +55,7 @@ func ExecuteFiles(files []string){
 }
 
 func QueryUser() string{
-	LogInfo(" query user")
+	LogDBInfo(" query user")
 	if DBDB == nil{
 		return "no db"
 	}
@@ -71,7 +71,7 @@ func QueryUser() string{
 	    if err != nil {
 			LogDBError(err)
 	    }
-		LogInfo("one done ")
+		LogDBInfo("one done ")
 	    result += "id: " +id + ", name: "+ name+ ", password: "+ password
 	}
 	err = rows.Err()
