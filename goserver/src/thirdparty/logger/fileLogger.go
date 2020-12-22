@@ -45,7 +45,9 @@ func (fileLog *fileLogger) writeOneMsg(msg string) {
 }
 
 func (fileLog *fileLogger) readyForLog(messageSize int) bool{
-	fileLog.doRollOver(messageSize)
+	if !fileLog.doRollOver(messageSize){
+		return false
+	}
 	fileLog.removeOldFile()
 
 	if fileLog.logFile == nil {
