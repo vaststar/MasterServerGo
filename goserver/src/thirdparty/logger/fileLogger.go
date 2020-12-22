@@ -66,13 +66,16 @@ func (fileLog *fileLogger) readyForLog(messageSize int) bool{
 }
 
 func (fileLog *fileLogger) doRollOver(messageSize int) bool{
-	fileLog.mCurrentDate = time.Now().Format("2006-01-02")
 	if messageSize > fileLog.singleFileSize {
 		fmt.Println("[FileLogger error]message too large, max size is: ",fileLog.singleFileSize)
 		return false
 	}
-	if fileLog.mCurrentSize + messageSize <= fileLog.singleFileSize &&
-	   fileLog.mCurrentDate == time.Now().Format("2006-01-02"){
+	if fileLog.mCurrentDate != time.Now().Format("2006-01-02"){
+		fileLog.closeCurrentFile()
+		fileLog.mCurrentDate = time.Now().Format("2006-01-02")
+		return true
+	}
+	if fileLog.mCurrentSize + messageSize <= fileLog.singleFileSize {
 		return true
 	}
 
@@ -106,7 +109,6 @@ func (fileLog *fileLogger) doRollOver(messageSize int) bool{
 			os.Rename(itemFile, newFileName)
 		}
 	}
-	fileLog.mCurrentDate = time.Now().Format("2006-01-02")
 	return true
 }
 
