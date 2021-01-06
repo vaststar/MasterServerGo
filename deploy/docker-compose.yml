@@ -1,5 +1,14 @@
 version: "3.6"
 services:
+  webgo_client:
+    image: "node"
+    container_name: "webgo_client_container"
+    volumes:
+      - ../client/webapp:/webapp
+      - ../webgoRun/client:/webapp/build
+    working_dir: /webapp
+    entrypoint: bash -c "npm install && npm run build"
+
   webgo_server:
     build:
       context: ../goserver
@@ -45,12 +54,17 @@ services:
     restart: always
     ports:
       - "8088:8088"
+      - "80:80"
     volumes:
       - ../webgoRun/nginx/logs:/usr/local/nginx/logs
       - ../nginx/nginx_default.conf:/etc/nginx/nginx.conf
       - ../nginx/conf.d:/etc/nginx/conf.d
+      - ../webgoRun/client:/client/build
     networks:
       - server_net
+    depends_on: 
+      - webgo_client
+      - webgo_server
 
 networks: 
   server_net:
