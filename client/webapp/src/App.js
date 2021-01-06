@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
@@ -7,7 +6,7 @@ function App() {
       <header className="App-header">
         
       </header>
-      <div>ttt</div>
+      <div>fg</div>
     </div>
   );
 }
