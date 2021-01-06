@@ -1,4 +1,4 @@
-version: "3"
+version: "3.6"
 services:
   webgo_server:
     build:
@@ -30,11 +30,10 @@ services:
       MYSQL_ROOT_PASSWORD: "webgo_mysql_password"
     volumes:
       - ../webgoRun/mysql/data:/var/lib/mysql
-      - ../webgoRun/mysql/log:/var/log/mysql
       - ../mysql/my.cnf:/etc/my.cnf
       - ../mysql/init:/docker-entrypoint-initdb.d
-      - ../mysql/backup:/backup
-    entrypoint: bash -c "chown -R mysql:mysql /var/log/mysql && exec /entrypoint.sh mysqld"
+      - ../mysql/backup:/backupscript
+      - ../webgoRun/mysql/backup:/backup
     ports:
       - "3306:3306"
     networks: 
