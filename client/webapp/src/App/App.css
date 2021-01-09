@@ -1,2 +1,6 @@
 @import 'antd/dist/antd.css';
 @import './pages/wedding/WeddingPage.css';
+
+.contentPage{
+    margin-top: 64px;
+}

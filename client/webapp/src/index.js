@@ -1,14 +1,12 @@
+import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App/App';
 import reportWebVitals from './reportWebVitals';
-import { ConfigProvider } from 'antd';
+import App from './App/App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ConfigProvider direction="rtl">
       <App />
-    </ConfigProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
