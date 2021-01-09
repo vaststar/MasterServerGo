@@ -60,6 +60,7 @@ services:
       - ../nginx/nginx_default.conf:/etc/nginx/nginx.conf
       - ../nginx/conf.d:/etc/nginx/conf.d
       - ../webgoRun/client:/client/build
+      - ../assets/images:/webgo_assets/assets/images
     networks:
       - server_net
     depends_on: 

@@ -54,25 +54,56 @@ func ExecuteFiles(files []string){
 	}
 }
 
-func QueryUser() string{
+func QueryUser() []User{
 	LogDBInfo(" query user")
+	var result []User
 	if DBDB == nil{
-		return "no db"
+		LogDBError("no db")
+		return result
 	}
 	rows, err := DBDB.db.Query("select * from identity")
 	if err != nil {
 		LogDBError(err)
+		return result
 	}
 	defer rows.Close()
 	var id, name, password string
-	var result string
 	for rows.Next() {
 	    err := rows.Scan(&id, &name, &password)
 	    if err != nil {
 			LogDBError(err)
-	    }
-		LogDBInfo("one done ")
-	    result += "id: " +id + ", name: "+ name+ ", password: "+ password
+		}else{
+			result = append(result,User{id,name,password})
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		LogDBError(err)
+	}
+	return result
+}
+
+func QuryAllImages() []Image{
+	LogDBInfo(" query images")
+	var result []Image
+	if DBDB == nil{
+		LogDBError("no db")
+		return result
+	}
+	rows, err := DBDB.db.Query("select * from wedding_images")
+	if err != nil {
+		LogDBError(err)
+		return result
+	}
+	defer rows.Close()
+	var id, name, uri string
+	for rows.Next() {
+	    err := rows.Scan(&id, &name, &uri)
+	    if err != nil {
+			LogDBError(err)
+	    }else{
+			result = append(result, Image{id,name,uri})
+		}
 	}
 	err = rows.Err()
 	if err != nil {
