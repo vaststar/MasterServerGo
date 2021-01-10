@@ -1,36 +1,32 @@
 package handler
 
 import (
-	"io"
 	"net/http"
 	. "goserver/server/sslog"
 	"goserver/server/serverdb"
-	"encoding/json"
+	"goserver/server/model"
 )
 
-func checkQueryError(res []byte, err error)string{
-	var result string
-	if err !=nil {
-		temp,_ := json.Marshal(serverdb.Error{ErrorCode:"0",ErrorString:"parse result fail"})
-		result = string(temp)
-	}else{
-		result = string(res)
-	}
-	return result
+func InitRouter(serverMux *http.ServeMux ){
+	serverMux.HandleFunc("/user",handleIterceptor(userHandler))
+	serverMux.HandleFunc("/assets/images",handleIterceptor(imageHandler))
 }
+
+func handleIterceptor(h http.HandlerFunc) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+		LogTrace("About to deal request: "+r.RequestURI)
+        h(w, r)
+    }
+}
+
 func userHandler(w http.ResponseWriter, r *http.Request) {
-	LogInfo("hello userHandler")
-	result := checkQueryError(json.Marshal(serverdb.QueryUser()))
-	io.WriteString(w, result)
+	result := serverdb.QueryUser()
+	resp := model.Resp{Code:"0", Data:result}
+	MarshalJson(w, resp)
 }
 
 func imageHandler(w http.ResponseWriter, r *http.Request) {
-	LogInfo("hello imageHandler")
-	result := checkQueryError( json.Marshal(serverdb.QuryAllImages()) )
-	io.WriteString(w, result)
-}
-
-func InitRouter(serverMux *http.ServeMux ){
-	serverMux.HandleFunc("/user",userHandler)
-	serverMux.HandleFunc("/assets/images",imageHandler)
+	result := serverdb.QuryAllImages()
+	resp := model.Resp{Code:"0", Data:result}
+	MarshalJson(w, resp)
 }

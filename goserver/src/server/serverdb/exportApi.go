@@ -6,6 +6,7 @@ import(
 	"bufio"
 	"strings"
 	. "goserver/server/sslog"
+	"goserver/server/model"
 )
 
 var DBDB *serverDB
@@ -54,9 +55,8 @@ func ExecuteFiles(files []string){
 	}
 }
 
-func QueryUser() []User{
-	LogDBInfo(" query user")
-	var result []User
+func QueryUser() []model.User{
+	var result []model.User
 	if DBDB == nil{
 		LogDBError("no db")
 		return result
@@ -73,7 +73,7 @@ func QueryUser() []User{
 	    if err != nil {
 			LogDBError(err)
 		}else{
-			result = append(result,User{id,name,password})
+			result = append(result,model.User{id,name,password})
 		}
 	}
 	err = rows.Err()
@@ -83,9 +83,8 @@ func QueryUser() []User{
 	return result
 }
 
-func QuryAllImages() []Image{
-	LogDBInfo(" query images")
-	var result []Image
+func QuryAllImages() []model.Image{
+	var result []model.Image
 	if DBDB == nil{
 		LogDBError("no db")
 		return result
@@ -102,7 +101,7 @@ func QuryAllImages() []Image{
 	    if err != nil {
 			LogDBError(err)
 	    }else{
-			result = append(result, Image{id,name,uri})
+			result = append(result, model.Image{id,name,uri})
 		}
 	}
 	err = rows.Err()

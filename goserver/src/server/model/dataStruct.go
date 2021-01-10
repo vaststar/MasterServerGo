@@ -1,14 +1,17 @@
-package serverdb
+package model
 
-type Error struct{
-	ErrorCode string `json:"errorCode"`
-	ErrorString string `json:"errorString"`
+type Resp struct {
+    Code string      `json:"code"`
+    Msg  string      `json:"msg,omitempty"`
+    Data interface{} `json:"data,omitempty"`
 }
+
 type User struct{
 	Id       string   `json:"id"`
 	Name     string   `json:"name"`
 	Password string   `json:"password"`
 }
+
 type Image struct{
 	Id     string    `json:"id"`
 	Name   string    `json:"name"`
