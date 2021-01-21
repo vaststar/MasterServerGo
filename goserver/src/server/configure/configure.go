@@ -3,6 +3,7 @@ package configure
 import(
 	"encoding/json"
 	"io/ioutil"
+	"sync"
 )
 
 //db config
@@ -49,10 +50,16 @@ type ServerConfig struct{
 	Port       int     `json:"port"`
 }
 
+type AssetsConfig struct{
+	ImagesPath  string `json:"imagesPath"`
+	ImagesUri   string `json:"imagesUri"`
+}
+
 type Configure struct{
 	DbConf  	DataBaseConfig `json:"dbConfig"`
 	LogConf 	LogConfig      `json:"logConfig"`
 	ServerConf  ServerConfig   `json:"serverConfig"`
+	AssetsConf  AssetsConfig   `json:"assetsConfig"`
 }
 
 func ReadConfig(filepath string)(*Configure,error){
@@ -62,6 +69,20 @@ func ReadConfig(filepath string)(*Configure,error){
 	}
 	config := &Configure{}
 	err = json.Unmarshal(bytes, config)
+	if err == nil{
+		initConfig(config)
+	}
 	return config, err
 }
 
+var appConfig *Configure
+var syncOnce  sync.Once
+func initConfig(conf *Configure){
+	syncOnce.Do(func(){
+		appConfig = conf
+	})
+}
+
+func GetConfig()*Configure{
+	return appConfig
+}

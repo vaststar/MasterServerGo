@@ -14,7 +14,6 @@ import (
 )
 
 var logLog     *loglog 
-var initSync   sync.Once
 func init(){
     logLog = &loglog{
         filePathLength : 40,

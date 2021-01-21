@@ -2,9 +2,12 @@ package handler
 
 import (
 	"net/http"
+	"path/filepath"
+	"strconv"
 	. "goserver/server/sslog"
 	"goserver/server/serverdb"
 	"goserver/server/model"
+	"goserver/server/configure"
 )
 
 func InitRouter(serverMux *http.ServeMux ){
@@ -26,7 +29,11 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func imageHandler(w http.ResponseWriter, r *http.Request) {
-	result := serverdb.QuryAllImages()
+	files,_ := filepath.Glob(configure.GetConfig().AssetsConf.ImagesPath+"*")
+	var result []model.Image
+	for index, str := range files{
+		result = append(result, model.Image{strconv.Itoa(index),filepath.Base(str),configure.GetConfig().AssetsConf.ImagesUri + filepath.Base(str)})
+	}
 	resp := model.Resp{Code:"0", Data:result}
 	MarshalJson(w, resp)
 }

@@ -9,7 +9,7 @@ class WeddingPage extends Component {
           <div >
             <Image.PreviewGroup className="imageGroup">
               {this.state.images?this.state.images.map((item,index)=>{
-                  return <Image width={600}  src={item.uri}/>
+                  return <Image width={500}  src={item.uri}/>
                 }):null}
             </Image.PreviewGroup>
           </div>

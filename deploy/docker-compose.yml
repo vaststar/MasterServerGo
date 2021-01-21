@@ -22,6 +22,7 @@ services:
       - ../goserver/config:/webgo/goserver/config
       - ../goserver/src:/webgo/goserver/src
       - ../webgoRun/server:/webgo/rundata
+      - ../assets/images:/webgo/assets/images
     depends_on:
       - webgo_mysql
     networks: 
