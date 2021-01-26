@@ -5,7 +5,7 @@ import(
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	. "goserver/server/sslog"
+    . "goserver/server/sslog"
 )
 // MarshalJson 把对象以json格式放到response中
 func MarshalJson(w http.ResponseWriter, v interface{}) error {

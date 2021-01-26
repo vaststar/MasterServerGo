@@ -17,3 +17,9 @@ type Image struct{
 	Name   string    `json:"name"`
 	Uri    string    `json:"uri"`
 }
+
+type SecretKey struct{
+	Id            string    `json:"id"`
+	KeySalt       string    `json:"keySalt"`
+	ExpireTime    int       `json:"expireTime"`
+}

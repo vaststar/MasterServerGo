@@ -5,20 +5,20 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for user_base
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `identity`  (
-  `userid` varchar(32) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `userid` VARCHAR(32) NOT NULL,
+  `username` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`userid`) USING BTREE,
   UNIQUE INDEX `userid`(`userid`) USING BTREE,
   UNIQUE INDEX `name`(`username`) USING BTREE
 );
 -- ----------------------------
--- Table structure for wedding_images
+-- Table structure for secret_key
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS `wedding_images`  (
-  `id` varchar(32) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `uri` varchar(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS `secret_key`  (
+  `id` VARCHAR(32) NOT NULL,
+  `keySalt` VARCHAR(32) NOT NULL,
+  `expireTime` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 );
 SET FOREIGN_KEY_CHECKS = 1;

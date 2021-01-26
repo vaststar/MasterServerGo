@@ -83,25 +83,25 @@ func QueryUser() []model.User{
 	return result
 }
 
-func QuryAllImages() []model.Image{
-	var result []model.Image
+func QuryKeyScrets() []model.SecretKey{
+	var result []model.SecretKey
 	if DBDB == nil{
 		LogDBError("no db")
 		return result
 	}
-	rows, err := DBDB.db.Query("select * from wedding_images")
+	rows, err := DBDB.db.Query("select * from secret_key")
 	if err != nil {
 		LogDBError(err)
 		return result
 	}
 	defer rows.Close()
-	var id, name, uri string
 	for rows.Next() {
-	    err := rows.Scan(&id, &name, &uri)
+		var tempVal model.SecretKey
+	    err := rows.Scan(&tempVal.Id, &tempVal.KeySalt, &tempVal.ExpireTime)
 	    if err != nil {
 			LogDBError(err)
 	    }else{
-			result = append(result, model.Image{id,name,uri})
+			result = append(result, tempVal)
 		}
 	}
 	err = rows.Err()

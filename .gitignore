@@ -50,3 +50,6 @@ yarn-error.log*
 .eslintcache
 /assets*
 
+.DS_Store
+*/.DS_Store
+
