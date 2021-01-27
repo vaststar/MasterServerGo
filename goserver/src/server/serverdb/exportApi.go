@@ -67,16 +67,29 @@ func QueryUser() []model.User{
 		return result
 	}
 	defer rows.Close()
-	var id, name, password string
 	for rows.Next() {
-	    err := rows.Scan(&id, &name, &password)
+		var temp model.User
+	    err := rows.Scan(&temp.Id, &temp.Name, &temp.Password)
 	    if err != nil {
 			LogDBError(err)
 		}else{
-			result = append(result,model.User{id,name,password})
+			result = append(result,temp)
 		}
 	}
-	err = rows.Err()
+	
+	if err = rows.Err(); err != nil {
+		LogDBError(err)
+	}
+	return result
+}
+
+func QueryUserWithName(name string) model.User{
+	var result model.User
+	if DBDB == nil{
+		LogDBError("no db")
+		return result
+	}
+	err := DBDB.db.QueryRow("select * from identity where username=?",name).Scan(&result.Id,&result.Name,&result.Password)
 	if err != nil {
 		LogDBError(err)
 	}
@@ -104,7 +117,20 @@ func QuryKeyScrets() []model.SecretKey{
 			result = append(result, tempVal)
 		}
 	}
-	err = rows.Err()
+	
+	if err = rows.Err(); err != nil {
+		LogDBError(err)
+	}
+	return result
+}
+
+func QueryKeyScretWithUserId(userid string) model.SecretKey{
+	var result model.SecretKey
+	if DBDB == nil{
+		LogDBError("no db")
+		return result
+	}
+	err := DBDB.db.QueryRow("select * from secret_key where userid=?",userid).Scan(&result.Id,&result.KeySalt,&result.ExpireTime)
 	if err != nil {
 		LogDBError(err)
 	}

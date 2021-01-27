@@ -16,9 +16,11 @@ CREATE TABLE IF NOT EXISTS `identity`  (
 -- Table structure for secret_key
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `secret_key`  (
-  `id` VARCHAR(32) NOT NULL,
+  `userid` VARCHAR(32) NOT NULL,
   `keySalt` VARCHAR(32) NOT NULL,
   `expireTime` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`userid`) USING BTREE,
+  UNIQUE INDEX `userid`(`userid`) USING BTREE,
+  CONSTRAINT `secret_key` FOREIGN KEY (`userid`) REFERENCES `identity` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 SET FOREIGN_KEY_CHECKS = 1;

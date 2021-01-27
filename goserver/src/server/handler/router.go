@@ -11,8 +11,9 @@ import (
 )
 
 func InitRouter(serverMux *http.ServeMux ){
-	serverMux.HandleFunc("/user",handleIterceptor(userHandler))
+	serverMux.HandleFunc("/user",validTokenHandlerIterceptor(userHandler))
 	serverMux.HandleFunc("/assets/images",handleIterceptor(imageHandler))
+	serverMux.HandleFunc("/authenticate/requestToken",requestTokenHandler)
 }
 
 func handleIterceptor(h http.HandlerFunc) http.HandlerFunc {
@@ -24,7 +25,7 @@ func handleIterceptor(h http.HandlerFunc) http.HandlerFunc {
 
 func userHandler(w http.ResponseWriter, r *http.Request) {
 	result := serverdb.QueryUser()
-	resp := model.Resp{Code:"0", Data:result}
+	resp := model.Resp{Code:model.SUCCESS, Data:result}
 	MarshalJson(w, resp)
 }
 
@@ -34,6 +35,6 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 	for index, str := range files{
 		result = append(result, model.Image{strconv.Itoa(index),filepath.Base(str),configure.GetConfig().AssetsConf.ImagesUri + filepath.Base(str)})
 	}
-	resp := model.Resp{Code:"0", Data:result}
+	resp := model.Resp{Code:model.SUCCESS, Data:result}
 	MarshalJson(w, resp)
 }
