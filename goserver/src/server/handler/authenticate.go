@@ -3,8 +3,11 @@ package handler
 import(
 	"fmt"
 	"time"
+	"net/http"
 	"goserver/thirdparty/github.com/dgrijalva/jwt-go"
 	"goserver/server/model"
+	"goserver/server/serverdb"
+	. "goserver/server/sslog"
 )
 
 type UserClaims struct{
@@ -42,4 +45,19 @@ func ParseToken(tokenStr string, secret model.SecretKey) (string, error) {
 	} else {
 		return "", fmt.Errorf("Unauthorized token")
 	}
+}
+
+func requestTokenHandler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		LogError("Can't parse request form ")
+	    return
+	}
+	username := r.Form.Get("username")
+	password := r.Form.Get("password")
+	if username == ""{
+		LogError("Empty username ")
+		return
+	}
+	
 }
