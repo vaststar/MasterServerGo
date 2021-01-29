@@ -18,7 +18,7 @@ class HeaderCom extends Component {
     }
     render() {
         return (
-            <Layout.Header align="center" style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+            <Layout.Header align="center" style={{ position: 'fixed', zIndex: 1, width: '100%' }} className="app-header">
                 <Row>
                 <Avatar src={logo} alt="学士" size={64}></Avatar>
                 <Menu onClick={this.handleClick}

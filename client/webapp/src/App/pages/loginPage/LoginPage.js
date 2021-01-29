@@ -19,7 +19,7 @@ class Login extends Component {
     } 
     return (
       <div>
-      <LoginForm userName={username} password={remember?password:null} remember={remember} submitForm={this.handleSubmit} 
+      <LoginForm userName={username} password={remember?password:null} remember={true} submitForm={this.handleSubmit} 
        forgetClick={this.clickForget} registerUrl='/register/' wrappedComponentRef={(form) => {this.formRef = form}}></LoginForm>
       {/* <Modal visible={this.state.forgetVisiable} footer={null} onCancel={()=>{this.setState({ forgetVisiable: false })}}>
       <div className="popForgetCom">
