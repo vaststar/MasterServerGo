@@ -1,9 +1,13 @@
-import WeddingPage from './pages/wedding/WeddingPage'
-import HomePage from './pages/homepage/HomePage'
+import WeddingPage from './pages/weddingPage/WeddingPage'
+import HomePage from './pages/homePage/HomePage'
+import LoginPage from './pages/loginPage/LoginPage'
 
-export default [
-    { path: "/", name: "App", component: HomePage ,auth:false},
-    { path: "/weddingPage/", name: "WeddingPage", component: WeddingPage }
-    
+
+let pathMap = [
+    { path: "/", name: "App", component: HomePage ,auth:true},
+    { path: "/login/", name: "LoginPage", component: LoginPage ,auth:false},
+    { path: "/weddingPage/", name: "WeddingPage", component: WeddingPage, auth:true}
 ]
+
+export default pathMap
 

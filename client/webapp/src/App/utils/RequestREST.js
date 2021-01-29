@@ -24,7 +24,7 @@ export default function request(method,url,body,token,detectString){
             mode: "cors",
             headers: {
                 "Content-Type": "application/json,text/plain,*/*; charset=utf-8",
-                "Authorization":"JWT "+token,
+                "Authorization":"Bearer "+token,
                 "Robot-Detect":detectString
             },
             body
@@ -38,17 +38,17 @@ export default function request(method,url,body,token,detectString){
     });
 }
 
-export const get = (url) => request('GET', url, null, window.localStorage.getItem('token'),secretHeader()); 
-export const post = (url, body) => request('POST', url, body, window.localStorage.getItem('token'),secretHeader()); 
-export const put = (url, body) => request('PUT', url, body, window.localStorage.getItem('token'),secretHeader()); 
-export const del = (url, body) => request('DELETE', url, body, window.localStorage.getItem('token'),secretHeader());
+export const get = (url) => request('GET', url, null, window.localStorage.getItem('accessToken'),secretHeader()); 
+export const post = (url, body) => request('POST', url, body, window.localStorage.getItem('accessToken'),secretHeader()); 
+export const put = (url, body) => request('PUT', url, body, window.localStorage.getItem('accessToken'),secretHeader()); 
+export const del = (url, body) => request('DELETE', url, body, window.localStorage.getItem('accessToken'),secretHeader());
 export const postFile = (url,file)=>{
     return new Promise((resolve, reject) => {
         fetch(url, {
             method:"POST",
             mode: "cors",
             headers: {
-                "Authorization":"JWT "+window.localStorage.getItem('token'),
+                "Authorization":"Bearer "+window.localStorage.getItem('accessToken'),
                 "Robot-Detect":secretHeader()
             },
             body:file

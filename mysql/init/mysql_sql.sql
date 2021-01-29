@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS `identity`  (
 CREATE TABLE IF NOT EXISTS `secret_key`  (
   `userid` VARCHAR(32) NOT NULL,
   `keySalt` VARCHAR(32) NOT NULL,
-  `expireTime` INT UNSIGNED NOT NULL,
+  `accessExpireTime` INT UNSIGNED NOT NULL,
+  `refreshExpireTime` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`userid`) USING BTREE,
   UNIQUE INDEX `userid`(`userid`) USING BTREE,
   CONSTRAINT `secret_key` FOREIGN KEY (`userid`) REFERENCES `identity` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE

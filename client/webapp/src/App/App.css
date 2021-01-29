@@ -1,5 +1,7 @@
 @import 'antd/dist/antd.css';
-@import './pages/wedding/WeddingPage.css';
+@import './pages/header/Header.css';
+@import './pages/weddingPage/WeddingPage.css';
+@import './pages/loginPage/loginPage.css';
 
 .contentPage{
     margin-top: 64px;

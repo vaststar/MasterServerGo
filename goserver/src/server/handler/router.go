@@ -11,9 +11,10 @@ import (
 )
 
 func InitRouter(serverMux *http.ServeMux ){
-	serverMux.HandleFunc("/user",validTokenHandlerIterceptor(userHandler))
+	serverMux.HandleFunc("/authenticate/requestAccessToken",requestAccessTokenHandler)
+	serverMux.HandleFunc("/authenticate/requestRefreshToken",requestRefreshTokenHandler)
+	serverMux.HandleFunc("/users",validTokenHandlerIterceptor(userHandler))
 	serverMux.HandleFunc("/assets/images",handleIterceptor(imageHandler))
-	serverMux.HandleFunc("/authenticate/requestToken",requestTokenHandler)
 }
 
 func handleIterceptor(h http.HandlerFunc) http.HandlerFunc {

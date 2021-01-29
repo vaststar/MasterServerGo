@@ -1,5 +1,5 @@
 import React,{ Component } from 'react'
-import {Image,message, Result} from "antd"
+import {Image,} from "antd"
 import {get} from '../../utils/RequestREST'
 
 class WeddingPage extends Component {

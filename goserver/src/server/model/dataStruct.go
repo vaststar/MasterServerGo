@@ -30,5 +30,6 @@ type Image struct{
 type SecretKey struct{
 	Id            string    `json:"id"`
 	KeySalt       string    `json:"keySalt"`
-	ExpireTime    int       `json:"expireTime"`
+	AccessExpireTime    int       `json:"accessExpireTime"`
+	RefreshExpireTime    int       `json:"refreshExpireTime"`
 }

@@ -110,7 +110,7 @@ func QuryKeyScrets() []model.SecretKey{
 	defer rows.Close()
 	for rows.Next() {
 		var tempVal model.SecretKey
-	    err := rows.Scan(&tempVal.Id, &tempVal.KeySalt, &tempVal.ExpireTime)
+	    err := rows.Scan(&tempVal.Id, &tempVal.KeySalt, &tempVal.AccessExpireTime, &tempVal.RefreshExpireTime)
 	    if err != nil {
 			LogDBError(err)
 	    }else{
@@ -130,7 +130,7 @@ func QueryKeyScretWithUserId(userid string) model.SecretKey{
 		LogDBError("no db")
 		return result
 	}
-	err := DBDB.db.QueryRow("select * from secret_key where userid=?",userid).Scan(&result.Id,&result.KeySalt,&result.ExpireTime)
+	err := DBDB.db.QueryRow("select * from secret_key where userid=?",userid).Scan(&result.Id,&result.KeySalt,&result.AccessExpireTime,&result.RefreshExpireTime)
 	if err != nil {
 		LogDBError(err)
 	}
