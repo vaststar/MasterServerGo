@@ -1,7 +1,10 @@
 import React,{ Component } from 'react'
 import PropTypes from 'prop-types'
+import {connect} from 'react-redux'
 import { withRouter ,Redirect} from 'react-router-dom'
-import {get} from '../../utils/RequestREST'
+import {message} from 'antd'
+import {post} from '../../utils/RequestREST'
+import {updateAccessToken,updateRefreshToken, updateLoginInfo} from '../../../Redux/ActionReducer/user'
 
 import {
     Form, Input, Button, Checkbox,
@@ -21,6 +24,7 @@ const REGISTER_URL = 'registerUrl';
 class LoginForm extends Component {
     onFinish = (values) => {
       console.log('Received values of form: ', values);
+      this.props[SUBMIT_FORM](values)
     };
     render(){
       return (
@@ -76,14 +80,48 @@ LoginForm.propTypes={
 //////   LoginComponent
 /////////////////////////////////////////////////////////////////////////////////////////////////
 class LoginComponent extends Component {
+  state = {redirectToReferrer: false,forgetVisiable:false, from:this.props.location.state || { from: "/" }}
   render(){
-  
+    
+    console.log('refresh: ', this.props.accessToken);
+    let { redirectToReferrer } = this.state;
+    if (redirectToReferrer)
+    {
+      return <Redirect to={this.state.from} />; 
+    } 
     return(
       <div>
-        <LoginForm userName={username} password={remember?password:null} remember={true} submitForm={this.handleSubmit} 
-       forgetClick={this.clickForget} registerUrl='/register/' wrappedComponentRef={(form) => {this.formRef = form}}></LoginForm>
+        <LoginForm userName={this.props.loginInfo.username} password={this.props.loginInfo.remember?this.props.loginInfo.password:null} remember={true} submitForm={this.handleSubmit} 
+        forgetClick={this.clickForget} registerUrl='/register/' wrappedComponentRef={(form) => {this.formRef = form}}></LoginForm>
       </div>
   );}
+  handleSubmit =(form)=>{
+    //请求token
+    post(this.props.requestRefreshTokenUrl,{'username':form.userName,'password':form.password}).then(response => response.json()).then(result => {
+      // 在此处写获取数据之后的处理逻辑
+      if(result.Code == 0){
+        this.props.setRefreshToken(result.data.token,result.data.userid)
+        this.props.setLoginInfo({'username':form.userName,'password':form.password,'remember':form.remember})
+        post(this.props.requestAccessTokenUrl,{'refreshToken':result.data.token,'userid':result.data.userid}).then(resp => resp.json()).then(res =>{
+          if(res.Code == 0){
+            this.props.setAccessToken(res.data)
+            this.setState({ redirectToReferrer: true });
+          }else{
+            message.error('获取accessToken失败');
+            this.props.setAccessToken(null)
+            this.setState({ redirectToReferrer: false });
+          }
+        })
+      }
+      else{
+        message.error('获取refreshToken失败');
+        this.props.setRefreshToken(null,null)
+        this.props.setLoginInfo({'username':form.userName,'password':null,'remember':form.remember})
+        this.props.setAccessToken(null)
+        this.setState({ redirectToReferrer: false });
+      }
+    })
+  }
 }
 
 const  mapStateToProps =(state)=>{
@@ -105,7 +143,7 @@ const mapDispatch =(dispatch)=>{
     }
   }
 }
-export default withRouter(connect(mapStateToProps,mapDispatch)(LoginComponent)
+export default withRouter(connect(mapStateToProps,mapDispatch)(LoginComponent))
 
 
    

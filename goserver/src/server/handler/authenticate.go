@@ -55,15 +55,15 @@ func parseToken(tokenStr string, secret model.SecretKey) (string, error) {
 }
 
 func requestRefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		LogError("Can't parse request form ")
-		w.WriteHeader(http.StatusBadRequest)
-		MarshalJson(w, model.Resp{Code:model.ERROR, Msg:"Error request!"})
-	    return
+	body, err := ParseJsonBody(w,r)
+	if err != nil{
+		LogError("error happen, won't continue.")
+		return
 	}
-	username := r.Form.Get("username")
-	password := r.Form.Get("password")
+	LogError("tttt ",body)
+
+	username := body["username"].(string)
+	password := body["password"].(string)
 	if username == ""{
 		w.WriteHeader(http.StatusBadRequest)
 		MarshalJson(w, model.Resp{Code:model.ERROR, Msg:"Empty username!"})
@@ -96,21 +96,19 @@ func requestRefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
 		MarshalJson(w, model.Resp{Code:model.SERVER_INTERNAL_ERROR, Msg:"Create token error!"})
 		return
 	}
-	resp := model.Resp{Code:model.SUCCESS, Data:tokenStr}
+	resp := model.Resp{Code:model.SUCCESS, Data:map[string]string{"token":tokenStr,"userid":user.Id}}
 	MarshalJson(w, resp)
 }
 
 func requestAccessTokenHandler(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		LogError("Can't parse request form ")
-		w.WriteHeader(http.StatusBadRequest)
-		MarshalJson(w, model.Resp{Code:model.ERROR, Msg:"Error request!"})
-	    return
+	body, err := ParseJsonBody(w,r)
+	if err != nil{
+		LogError("error happen, won't continue.")
+		return
 	}
 	
-	refreshToken := r.Form.Get("refreshToken")
-	userid := r.Form.Get("userid")
+	refreshToken := body["refreshToken"].(string)
+	userid := body["userid"].(string)
 	if refreshToken == "" || userid == ""{
 		LogError("Refresh token check failed")
 		w.WriteHeader(http.StatusBadRequest)

@@ -5,6 +5,7 @@ import(
 	"bytes"
 	"io/ioutil"
 	"net/http"
+	"goserver/server/model"
     . "goserver/server/sslog"
 )
 // MarshalJson 把对象以json格式放到response中
@@ -27,4 +28,24 @@ func UnMarshalJson(req *http.Request, v interface{}) error {
     }
     json.Unmarshal([]byte(bytes.NewBuffer(result).String()), v)
     return nil
+}
+
+func ParseJsonBody(w http.ResponseWriter, r *http.Request) (map[string]interface{},error){
+	var tempMap map[string]interface{}
+    b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		LogError("Can't read request body ")
+		w.WriteHeader(http.StatusBadRequest)
+		MarshalJson(w, model.Resp{Code:model.ERROR, Msg:"Error request!"})
+	    return tempMap, err
+	}
+	err = json.Unmarshal([]byte(b), &tempMap)
+	if err != nil{
+		LogError("Can't decode json body ")
+		w.WriteHeader(http.StatusBadRequest)
+		MarshalJson(w, model.Resp{Code:model.ERROR, Msg:"Error request!"})
+		return tempMap, err
+    }
+    return tempMap, err
 }
