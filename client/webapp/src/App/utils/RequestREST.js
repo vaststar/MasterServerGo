@@ -10,7 +10,7 @@ function secretHeader(){
                       ":HEADER"
     return md5(currentString)
 }
-export default function request(method,url,body,token,detectString){
+export default function request(method,url,body,token,userid,detectString){
     method = method.toUpperCase(); 
     if (method === 'GET') {
         // fetch的GET不允许有body，参数只能放在url中 
@@ -25,6 +25,7 @@ export default function request(method,url,body,token,detectString){
             headers: {
                 "Content-Type": "application/json,text/plain,*/*; charset=utf-8",
                 "Authorization":"Bearer "+token,
+                "userid":userid,
                 "Robot-Detect":detectString
             },
             body
@@ -38,10 +39,10 @@ export default function request(method,url,body,token,detectString){
     });
 }
 
-export const get = (url) => request('GET', url, null, window.localStorage.getItem('accessToken'),secretHeader()); 
-export const post = (url, body) => request('POST', url, body, window.localStorage.getItem('accessToken'),secretHeader()); 
-export const put = (url, body) => request('PUT', url, body, window.localStorage.getItem('accessToken'),secretHeader()); 
-export const del = (url, body) => request('DELETE', url, body, window.localStorage.getItem('accessToken'),secretHeader());
+export const get = (url) => request('GET', url, null, window.localStorage.getItem('accessToken'), window.localStorage.getItem('userid'), secretHeader()); 
+export const post = (url, body) => request('POST', url, body, window.localStorage.getItem('accessToken'), window.localStorage.getItem('userid'), secretHeader()); 
+export const put = (url, body) => request('PUT', url, body, window.localStorage.getItem('accessToken'), window.localStorage.getItem('userid'), secretHeader()); 
+export const del = (url, body) => request('DELETE', url, body, window.localStorage.getItem('accessToken'), window.localStorage.getItem('userid'), secretHeader());
 export const postFile = (url,file)=>{
     return new Promise((resolve, reject) => {
         fetch(url, {

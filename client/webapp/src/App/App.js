@@ -22,10 +22,10 @@ class App extends Component{
                   {routerMap.map((item,index) => {
                       return <Route key={index} path={item.path} exact render={props =>
                                 (!item.auth? (<item.component {...props} />) : 
-                                  ( this.props.valid ? <item.component {...props} /> : <Redirect to='/login/' />))
+                                  ( this.props.valid ? <item.component {...props} /> : <Redirect to='/login' />))
                             }/>
                   })}
-                  <Redirect to='/'/>
+                  <Redirect to='/home'from="/"/>
                 </Switch>
               </div>
               <Layout.Footer style={{ textAlign: 'center',background: 'rgba(255,255,255,0)'  }}>
@@ -44,6 +44,5 @@ const  mapStateToProps =(state)=>{
     ...state.userReducer
   }
 }
-
 const A =connect(mapStateToProps)(App);
 export default A;

@@ -26,7 +26,7 @@ class HeaderCom extends Component {
                   theme='dark'
                   selectedKeys={[this.props.location.pathname]}
                 >
-                <Menu.Item key="/"><Link to={this.getLinkToUrl('/')}/><HomeOutlined />首页</Menu.Item>
+                <Menu.Item key="/home"><Link to={this.getLinkToUrl('/home')}/><HomeOutlined />首页</Menu.Item>
                 <Menu.Item key='/weddingPage'><Link to={this.getLinkToUrl('/weddingPage')}/><HeartOutlined />婚礼</Menu.Item>
                 </Menu></Row>
             </Layout.Header>

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import { withRouter ,Redirect} from 'react-router-dom'
 import {message} from 'antd'
 import {post} from '../../utils/RequestREST'
-import {updateAccessToken,updateRefreshToken, updateLoginInfo} from '../../../Redux/ActionReducer/user'
+import {updateAccessToken, updateRefreshToken, updateLoginInfo, updateValidState} from '../../../Redux/ActionReducer/user'
 
 import {
     Form, Input, Button, Checkbox,
@@ -92,6 +92,31 @@ class LoginComponent extends Component {
         forgetClick={this.clickForget} registerUrl='/register/' wrappedComponentRef={(form) => {this.formRef = form}}></LoginForm>
       </div>
   );}
+  componentDidMount(){
+    //如果有access token，则去刷新下
+    if(this.props.valid){
+      return;
+    }
+    if(typeof this.props.accessToken != "undefined" || this.props.accessToken != null || this.props.accessToken != ""){
+      post(this.props.validAccessTokenUrl).then(response => response.json()).then(result => {
+        if(result.code == 0){
+          this.props.setValidState(true)
+          this.setState({ redirectToReferrer: true });
+        }else if(typeof this.props.refreshToken != "undefined" || this.props.refreshToken != null || this.props.refreshToken != ""){ 
+          postMessage(this.props.requestAccessTokenUrl,{'refreshToken':this.props.refreshToken,'userid':this.props.userid}).then(resp => resp.json()).then(res =>{
+            if(res.code == 0){
+              this.props.setAccessToken(res.data)
+            }else{
+              this.props.setRefreshToken(null,null)
+              this.props.setAccessToken(null)
+            }
+          })
+        }else{
+          this.props.setAccessToken(null)
+        }
+      })
+    }
+  }
   handleSubmit =(form)=>{
     //请求token
     post(this.props.requestRefreshTokenUrl,{'username':form.userName,'password':form.password}).then(response => response.json()).then(result => {
@@ -103,7 +128,6 @@ class LoginComponent extends Component {
           if(res.code == 0){
             this.props.setAccessToken(res.data)
             this.setState({ redirectToReferrer: true });
-            console.log("login:",res)
           }else{
             message.error('获取accessToken失败');
             this.props.setAccessToken(null)
@@ -138,6 +162,9 @@ const mapDispatch =(dispatch)=>{
     },
     setLoginInfo:(userInfo)=>{
       dispatch(updateLoginInfo(userInfo))
+    },
+    setValidState:(isValid)=>{
+      dispatch(updateValidState(isValid))
     }
   }
 }

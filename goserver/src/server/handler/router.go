@@ -13,6 +13,7 @@ import (
 func InitRouter(serverMux *http.ServeMux ){
 	serverMux.HandleFunc("/authenticate/requestAccessToken",requestAccessTokenHandler)
 	serverMux.HandleFunc("/authenticate/requestRefreshToken",requestRefreshTokenHandler)
+	serverMux.HandleFunc("/authenticate/isAccessTokenValid",validTokenHandlerIterceptor(isAccessTokenValidHandler))
 	serverMux.HandleFunc("/users",validTokenHandlerIterceptor(userHandler))
 	serverMux.HandleFunc("/assets/images",handleIterceptor(imageHandler))
 }
@@ -38,4 +39,8 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	resp := model.Resp{Code:model.SUCCESS, Data:result}
 	MarshalJson(w, resp)
+}
+
+func isAccessTokenValidHandler(w http.ResponseWriter, r *http.Request) {
+	MarshalJson(w, model.Resp{Code:model.SUCCESS, Data:true})
 }
