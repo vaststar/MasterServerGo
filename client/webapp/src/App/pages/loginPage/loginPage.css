@@ -1,16 +1,10 @@
 .login_page_loginForm{
     margin-top: 40px;
 }
-
-.login-form {
-    max-width: 300px;
-    float:center;
-  }
 .login-form-forgot {
     float: right;
-  }
-.ant-col-rtl .login-form-forgot {
-    float: left;
+    color: rgb(24,144,255);
+    cursor: pointer;
   }
 .login-form-button {
     width: 100%;

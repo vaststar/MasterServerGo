@@ -27,7 +27,7 @@ export const updateRefreshToken = (tokenStr,uid)=>({
 
 export const UpdateLoginInfo = 'updateLoginInfo';
 export const updateLoginInfo = (userInfo)=>({
-    type:UpdateRefreshToken,
+    type:UpdateLoginInfo,
     userInfo
 }); 
 
@@ -45,6 +45,7 @@ export const userReducer = (state=UserData,action)=>{
             }
             return {...state,accessToken:action.token};
         case UpdateRefreshToken:
+            console.log("test:",action)
             window.localStorage.setItem('refreshToken',action.token)
             window.localStorage.setItem('userid',action.userid)
             return {...state, refreshToken:action.token, userid:action.userid};

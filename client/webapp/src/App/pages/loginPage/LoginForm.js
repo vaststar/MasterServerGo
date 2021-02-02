@@ -23,7 +23,6 @@ const REGISTER_URL = 'registerUrl';
 //////////////////////////////////////////////////////////////////////////////////
 class LoginForm extends Component {
     onFinish = (values) => {
-      console.log('Received values of form: ', values);
       this.props[SUBMIT_FORM](values)
     };
     render(){
@@ -82,8 +81,6 @@ LoginForm.propTypes={
 class LoginComponent extends Component {
   state = {redirectToReferrer: false,forgetVisiable:false, from:this.props.location.state || { from: "/" }}
   render(){
-    
-    console.log('refresh: ', this.props.accessToken);
     let { redirectToReferrer } = this.state;
     if (redirectToReferrer)
     {
@@ -99,13 +96,14 @@ class LoginComponent extends Component {
     //请求token
     post(this.props.requestRefreshTokenUrl,{'username':form.userName,'password':form.password}).then(response => response.json()).then(result => {
       // 在此处写获取数据之后的处理逻辑
-      if(result.Code == 0){
+      if(result.code == 0){
         this.props.setRefreshToken(result.data.token,result.data.userid)
         this.props.setLoginInfo({'username':form.userName,'password':form.password,'remember':form.remember})
         post(this.props.requestAccessTokenUrl,{'refreshToken':result.data.token,'userid':result.data.userid}).then(resp => resp.json()).then(res =>{
-          if(res.Code == 0){
+          if(res.code == 0){
             this.props.setAccessToken(res.data)
             this.setState({ redirectToReferrer: true });
+            console.log("login:",res)
           }else{
             message.error('获取accessToken失败');
             this.props.setAccessToken(null)

@@ -1,5 +1,5 @@
 import './App.css'
-
+import React,{ Component } from 'react'
 import { BrowserRouter, Route , Switch, Redirect} from 'react-router-dom'
 import {Layout,BackTop} from 'antd'
 import { ConfigProvider } from 'antd'
@@ -8,8 +8,10 @@ import {connect} from 'react-redux'
 import routerMap from './routerMap'
 import Header from "./pages/header/Header"
 
-function App() {
-  return (
+class App extends Component{
+  render(){
+    console.log("app:",this.props)
+    return (
     <div className="App">
         <ConfigProvider>
           <Layout>
@@ -20,7 +22,7 @@ function App() {
                   {routerMap.map((item,index) => {
                       return <Route key={index} path={item.path} exact render={props =>
                                 (!item.auth? (<item.component {...props} />) : 
-                                  ( props.valid ? <item.component {...props} /> : <Redirect to='/login/' />))
+                                  ( this.props.valid ? <item.component {...props} /> : <Redirect to='/login/' />))
                             }/>
                   })}
                   <Redirect to='/'/>
@@ -34,7 +36,7 @@ function App() {
           </Layout>
         </ConfigProvider>
     </div>
-  );
+  );}
 }
 
 const  mapStateToProps =(state)=>{
