@@ -2,6 +2,7 @@ package serverdb
 
 import(
 	"database/sql"
+	"time"
 	. "goserver/server/sslog"
 	_ "goserver/thirdparty/github.com/mattn/go-sqlite3"
 	_ "goserver/thirdparty/github.com/go-sql-driver/mysql"
@@ -17,19 +18,46 @@ func createDB(driverName string, dataSourceName string) *serverDB{
 		LogDBError(driverName," not supported.")
 		return nil
 	}
-	dbConn, err := sql.Open(driverName, dataSourceName)
-	if err != nil{
+	if dbConn, err := sql.Open(driverName, dataSourceName); err == nil{
+		if err = dbConn.Ping(); err == nil{
+			svDB := &serverDB{
+				db : dbConn,
+			}
+			LogDBInfo("connect to db success")
+			return svDB
+		}else{
+			LogDBError(err)
+		}
+	}else{
 		LogDBError(err)
-		return nil
-	}    
-	if err := dbConn.Ping(); err != nil {
-		LogDBError(err)
-		return nil
 	}
-	svDB := &serverDB{
-		db : dbConn,
+	t := time.NewTicker(30 * time.Second)
+	defer t.Stop()
+	tryCount := 0;
+	for{
+		select {
+		case <- t.C:
+			if tryCount > 10{
+				LogDBError("try connect db for 5 times and fail")
+				return nil
+			}
+			tryCount++
+			LogDBError("start reconnect:",tryCount)
+			if dbConn, err := sql.Open(driverName, dataSourceName); err == nil{
+				if err = dbConn.Ping(); err == nil{
+					svDB := &serverDB{
+						db : dbConn,
+					}
+					LogDBInfo("connect to db success")
+					return svDB
+				}else{
+					LogDBError(err)
+				}
+			}else{
+				LogDBError(err)
+			}
+		}
 	}
-	return svDB
 }
 
 func (svDB *serverDB)closeDB(){
