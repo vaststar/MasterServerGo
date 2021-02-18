@@ -62,9 +62,7 @@ export const userReducer = (state=UserData,action)=>{
             window.localStorage.setItem('loginInfo',JSON.stringify(action.userInfo))
             return {...state,loginInfo:action.userInfo};
         case UpdateValidState:
-            console.log("param isvalid:",action.isValid)
             window.sessionStorage.setItem('valid',action.isValid)
-            console.log("isvalid:",window.sessionStorage.getItem('valid'))
             return {...state, valid:action.isValid};
         default:
             return {...state};

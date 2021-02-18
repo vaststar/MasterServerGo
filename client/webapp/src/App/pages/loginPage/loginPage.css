@@ -1,6 +1,9 @@
 .login_page_loginForm{
     margin-top: 40px;
 }
+.login-form-remember{
+    float: left;
+}
 .login-form-forgot {
     float: right;
     color: rgb(24,144,255);
@@ -8,4 +11,5 @@
   }
 .login-form-button {
     width: 100%;
+    margin-top: -10px;
 }

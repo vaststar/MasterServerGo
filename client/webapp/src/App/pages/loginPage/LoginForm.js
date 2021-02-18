@@ -47,7 +47,7 @@ class LoginForm extends Component {
           <Input prefix={<LockOutlined/>} type="password" placeholder="密码" />
         </Form.Item>
         <Form.Item>
-          <Form.Item
+          <Form.Item className="login-form-remember"
             name={REMEMBER}
             valuePropName='checked'
             initialValue={this.props[REMEMBER]}
