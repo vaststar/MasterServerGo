@@ -97,14 +97,14 @@ class LoginComponent extends Component {
     if(this.props.valid){
       return;
     }
-    if(typeof this.props.accessToken != "undefined" || this.props.accessToken != null || this.props.accessToken != ""){
+    if(typeof this.props.accessToken !== "undefined" || this.props.accessToken !== null || this.props.accessToken !== ""){
       post(this.props.validAccessTokenUrl).then(response => response.json()).then(result => {
-        if(result.code == 0){
+        if(result.code === 0){
           this.props.setValidState(true)
           this.setState({ redirectToReferrer: true });
-        }else if(typeof this.props.refreshToken != "undefined" || this.props.refreshToken != null || this.props.refreshToken != ""){ 
+        }else if(typeof this.props.refreshToken !== "undefined" || this.props.refreshToken !== null || this.props.refreshToken !== ""){ 
           postMessage(this.props.requestAccessTokenUrl,{'refreshToken':this.props.refreshToken,'userid':this.props.userid}).then(resp => resp.json()).then(res =>{
-            if(res.code == 0){
+            if(res.code === 0){
               this.props.setAccessToken(res.data)
             }else{
               this.props.setRefreshToken(null,null)
@@ -121,11 +121,11 @@ class LoginComponent extends Component {
     //请求token
     post(this.props.requestRefreshTokenUrl,{'username':form.userName,'password':form.password}).then(response => response.json()).then(result => {
       // 在此处写获取数据之后的处理逻辑
-      if(result.code == 0){
+      if(result.code === 0){
         this.props.setRefreshToken(result.data.token,result.data.userid)
         this.props.setLoginInfo({'username':form.userName,'password':form.password,'remember':form.remember})
         post(this.props.requestAccessTokenUrl,{'refreshToken':result.data.token,'userid':result.data.userid}).then(resp => resp.json()).then(res =>{
-          if(res.code == 0){
+          if(res.code === 0){
             this.props.setAccessToken(res.data)
             this.setState({ redirectToReferrer: true });
           }else{

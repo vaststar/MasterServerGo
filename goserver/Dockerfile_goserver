@@ -1,5 +1,5 @@
 FROM golang
-MAINTAINER ThomasZhu 47029316@qq.com
+LABEL maintainer="47029316@qq.com"
 
 COPY runserver.sh /webgo/goserver/runserver.sh
 
