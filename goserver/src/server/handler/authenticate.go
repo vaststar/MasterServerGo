@@ -60,7 +60,6 @@ func requestRefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
 		LogError("error happen, won't continue.")
 		return
 	}
-	LogError("tttt ",body)
 
 	username := body["username"].(string)
 	password := body["password"].(string)

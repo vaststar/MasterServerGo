@@ -1,7 +1,7 @@
 import React,{ Component } from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import { withRouter ,Redirect} from 'react-router-dom'
+import {Navigate} from 'react-router-dom'
 import {message} from 'antd'
 import {post} from '../../utils/RequestREST'
 import {updateAccessToken, updateRefreshToken, updateLoginInfo, updateValidState} from '../../../Redux/ActionReducer/user'
@@ -10,6 +10,7 @@ import {
     Form, Input, Button, Checkbox,
   } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import withRouter from '../../utils/WithRouter';
 
 const USER_NAME = 'userName';
 const PASSWORD = 'password';
@@ -79,12 +80,12 @@ LoginForm.propTypes={
 //////   LoginComponent
 /////////////////////////////////////////////////////////////////////////////////////////////////
 class LoginComponent extends Component {
-  state = {redirectToReferrer: false,forgetVisiable:false, from:this.props.location.state || { from: "/" }}
+  state = {redirectToReferrer: false,forgetVisiable:false}
   render(){
     let { redirectToReferrer } = this.state;
     if (redirectToReferrer)
     {
-      return <Redirect to={this.state.from} />; 
+      return <Navigate to="/" replace/>; 
     } 
     return(
       <div>

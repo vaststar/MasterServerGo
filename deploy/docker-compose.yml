@@ -7,7 +7,7 @@ services:
       - ../client/webapp:/webapp
       - ../webgoRun/client:/webapp/build
     working_dir: /webapp
-    entrypoint: bash -c "export NODE_OPTIONS=--openssl-legacy-provider && npm install && npm run build"
+    entrypoint: bash -c "npm install && npm run build"
 
   webgo_server:
     build:

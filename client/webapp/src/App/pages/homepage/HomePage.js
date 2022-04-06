@@ -3,7 +3,7 @@ class HomePage extends Component {
     render() {
         return(
           <div >
-              <div>ssss</div>
+              <div>测试测试</div>
           </div>
         )
     }

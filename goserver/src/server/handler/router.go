@@ -20,8 +20,9 @@ func InitRouter(serverMux *http.ServeMux ){
 
 func handleIterceptor(h http.HandlerFunc) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
-		LogTrace("About to deal request: "+r.RequestURI)
+		LogTrace("Start dealing request: "+r.RequestURI)
         h(w, r)
+		LogTrace("Finish dealing request: "+r.RequestURI)
     }
 }
 
@@ -35,7 +36,7 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 	files,_ := filepath.Glob(configure.GetConfig().AssetsConf.ImagesPath+"*")
 	var result []model.Image
 	for index, str := range files{
-		result = append(result, model.Image{strconv.Itoa(index),filepath.Base(str),configure.GetConfig().AssetsConf.ImagesUri + filepath.Base(str)})
+		result = append(result, model.Image{Id: strconv.Itoa(index), Name: filepath.Base(str), Uri: configure.GetConfig().AssetsConf.ImagesUri + filepath.Base(str)})
 	}
 	resp := model.Resp{Code:model.SUCCESS, Data:result}
 	MarshalJson(w, resp)
