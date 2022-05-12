@@ -75,7 +75,7 @@ services:
     image: "videoserver"
     container_name: "video_server_container"
     ports:
-      - 1935:1935
+      - 9935:1935
       - 8080:8080
     volumes:
       - ../webgoRun/video_server/logs:/usr/local/nginx/logs
