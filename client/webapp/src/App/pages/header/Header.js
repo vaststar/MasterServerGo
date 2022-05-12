@@ -4,14 +4,14 @@ import {Layout, Menu, Avatar, Row} from 'antd'
 import {
     HomeOutlined,
     HeartOutlined,
+    VideoCameraOutlined,
   } from '@ant-design/icons';
 import logo from './logo.png'
 import withRouter from '../../utils/WithRouter';
+import { RoutePath } from '../../define/dataDefine';
 
 class HeaderCom extends Component {
     render() {
-        const HomePath = "/home"
-        const WeddingPath = "/weddingPage"
         console.log("test:",this.props.location)
         return (
             <Layout.Header align="center" style={{ position: 'fixed', zIndex: 1, width: '100%' }} className="app-header">
@@ -22,8 +22,9 @@ class HeaderCom extends Component {
                   theme='dark'
                   selectedKeys={[this.props.location.pathname]}
                 >
-                <Menu.Item key={HomePath}><Link to={HomePath}/><HomeOutlined />首页</Menu.Item>
-                <Menu.Item key={WeddingPath}><Link to={WeddingPath}/><HeartOutlined />婚礼</Menu.Item>
+                <Menu.Item key={RoutePath.home}><Link to={RoutePath.home}/><HomeOutlined /> 首页</Menu.Item>
+                <Menu.Item key={RoutePath.wedding}><Link to={RoutePath.wedding}/><HeartOutlined /> 婚礼</Menu.Item>
+                <Menu.Item key={RoutePath.video}><Link to={RoutePath.video}/><VideoCameraOutlined /> 视频</Menu.Item>
                 </Menu></Row>
             </Layout.Header>
         );

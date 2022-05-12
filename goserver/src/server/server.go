@@ -11,7 +11,7 @@ import (
 )
 
 func SERVER(addr string) {
-	LogInfo("====Start Server On ",addr,"====")
+	LogInfo("====Start Server On: ",addr,"====")
 	mu := http.NewServeMux()
 	handler.InitRouter(mu)
 
@@ -24,6 +24,7 @@ func SERVER(addr string) {
 	}
 	monitorSystem(s)
 	s.ListenAndServe()
+	LogInfo("====Finish Server On: ",addr,"====")
 }
 
 func monitorSystem(server *http.Server){
